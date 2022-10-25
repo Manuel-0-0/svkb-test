@@ -1,22 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import { getArticle } from "../api/articleApis";
 import parse from "html-react-parser";
 import Loading from "./Loading";
 
-const ArticleCard = ({ articleId }) => {
-  const [article, setArticle] = useState();
+const ArticleCard = ({ article }) => {
+  
 
-  const getSingleArticle = async () => {
-    try {
-      const response = await getArticle({ id: articleId });
-      setArticle(response.data);
-    } catch (err) {}
-  };
-
-  useEffect(() => {
-    getSingleArticle();
-  }, [articleId]);
+  
   
   return (
     <>
@@ -33,7 +23,7 @@ const ArticleCard = ({ articleId }) => {
               </p>
             </div>
             <div className="py-4 px-6  text-left">
-              <Link to={`/articles/${articleId}`} className="text-[#324299]">
+              <Link to={`/articles/${article.id}`} className="text-[#324299]">
                 Learn more...
               </Link>
             </div>

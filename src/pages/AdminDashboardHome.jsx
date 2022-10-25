@@ -3,7 +3,9 @@ import { Link } from "react-router-dom";
 import { NewspaperIcon, TrashIcon } from "@heroicons/react/20/solid";
 import { AuthContext } from "../authContext";
 import { getCategories } from "../api/categoryApis";
-import { getArticles } from "../api/articleApis";
+import { getUserArticles } from "../api/articleApis";
+import moment from "moment";
+import Cookies from 'js-cookie'
 // import DeleteModal from "../components/DeleteModal";
 
 import AuthenticatedLayout from "../layout/AuthenticatedLayout";
@@ -18,14 +20,15 @@ const AdminDashboardHome = () => {
     try {
       const response = await getCategories();
       setCategories(response.data);
-    } catch (err) {}
+    } catch (err) { }
   };
 
   const getAllArticles = async () => {
     try {
-      const response = await getArticles();
+      const response = await getUserArticles({ id: Cookies.get("sv_user_id") });
+      console.log(response.data)
       setArticles(response.data);
-    } catch (err) {}
+    } catch (err) { }
   };
 
   useEffect(() => {
@@ -115,7 +118,7 @@ const AdminDashboardHome = () => {
                       Article name
                     </th>
                     <th scope="col" className="py-3 px-6">
-                      View Count
+                      Status
                     </th>
                     <th scope="col" className="py-3 px-6">
                       Category
@@ -128,34 +131,44 @@ const AdminDashboardHome = () => {
                     </th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr className="bg-white border-b">
-                    <th
-                      scope="row"
-                      className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap"
-                    >
-                      Apple MacBook Pro 17"
-                    </th>
-                    <td className="py-4 px-6">Sliver</td>
-                    <td className="py-4 px-6">Laptop</td>
-                    <td className="py-4 px-6">$2999</td>
-                    <td className="py-4 px-6 text-right flex">
-                      <Link
-                        to={`/articles/$`}
-                        className="font-medium text-blue-600 hover:underline mr-4 "
+                {articles.map((article) =>
+                  <tbody key={article.Article.id}>
+                    <tr className="bg-white border-b">
+                      <th
+                        scope="row"
+                        className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap"
                       >
-                        Edit
-                      </Link>
+                        <Link
+                          to={`/articles/${article.Article.id}`}
+                          className="font-medium text-blue-600 hover:underline mr-4 "
+                        >
+                          {article.Article.title}
+                        </Link>
 
-                      <button
-                        className="font-medium text-blue-600"
-                        onClick={() => setDeleteOpen(true)}
-                      >
-                        <TrashIcon className="w-5 h-5" />
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
+                        
+                      </th>
+                      <td className="py-4 px-6">{article.Article.draftStatus}</td>
+                      <td className="py-4 px-6">{article.category_name}</td>
+                      <td className="py-4 px-6">{moment(article.Article.dateCreated).format('DD, MMMM YYYY')}</td>
+            
+                      <td className="py-4 px-6 text-right flex">
+                        <Link
+                          to={`/articles/$`}
+                          className="font-medium text-blue-600 hover:underline mr-4 "
+                        >
+                          Edit
+                        </Link>
+
+                        <button
+                          className="font-medium text-blue-600"
+                          onClick={() => setDeleteOpen(true)}
+                        >
+                          <TrashIcon className="w-5 h-5" />
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>)}
+
               </table>
             </div>
             {/* <DeleteModal

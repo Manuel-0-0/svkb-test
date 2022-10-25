@@ -41,7 +41,7 @@ const Home = () => {
           <div className="grid grid-cols-1 gap-16 md:grid-cols-2 lg:grid-cols-3 px-4 md:px-6 w-9/12 mx-auto">
             {articles.length > 0 ? (
               articles.map((article) => (
-                <ArticleCard key={article.id} articleId={article.id} />
+                <ArticleCard key={article.Article.id} article={article.Article} />
               ))
             ) : (
               <p className="text-xl text-gray-600 mb-2">

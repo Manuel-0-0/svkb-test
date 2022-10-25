@@ -6,6 +6,7 @@ export const AuthContext = React.createContext();
 const initialState = {
   isAuthenticated: false,
   user: null,
+  userId: null,
   token: null,
 };
 
@@ -14,19 +15,24 @@ const reducer = (state, action) => {
     case "LOGIN":
       Cookies.set("sv_user", action.payload.user);
       Cookies.set("sv_token", action.payload.token);
+      Cookies.set("sv_user_id", action.payload.userId)
       return {
         ...state,
         isAuthenticated: true,
-        user: Cookies.get("sv_user"),
-        token: Cookies.get("sv_token"),
+        user: action.payload.user,
+        token: action.payload.token,
+        userId: action.payload.userId
       };
     case "LOGOUT":
       Cookies.remove("sv_token");
       Cookies.remove("sv_user");
+      Cookies.remove("sv_user_id");
       return {
         ...state,
         isAuthenticated: false,
         user: null,
+        token: null,
+        userId: null
       };
     default:
       return state;

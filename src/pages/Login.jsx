@@ -26,7 +26,8 @@ const Login = () => {
         type: "LOGIN",
         payload: {
           user: username,
-          token: loggedInUser.data.Authorization,
+          token: loggedInUser.data.Token,
+          userId:loggedInUser.data.User.id
         },
       });
       setSubmitting(false);

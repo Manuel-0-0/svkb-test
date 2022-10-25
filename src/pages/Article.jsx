@@ -18,7 +18,7 @@ const Article = () => {
     try {
       setLoading(true);
       const response = await getArticle({ id: articleId });
-      setArticle(response.data);
+      setArticle(response.data.Article);
       setLoading(false);
     } catch (err) {}
   };

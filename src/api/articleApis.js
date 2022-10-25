@@ -14,3 +14,4 @@ export const deleteArticle = ({ id }) => axiosInstance.delete(`/articles/Delete/
 
 export const searchForArticle =({search}) => axiosInstance.get(`/articles/Search?keyword=${search}`)
 
+export const getUserArticles = ({id}) =>axiosInstance.get(`/articles/user/${id}`)

@@ -22,11 +22,13 @@ const AuthenticatedLayout = ({ children }) => {
   const [user] = useState(
     Cookies.get("sv_user") ? Cookies.get("sv_user") : null
   );
+  const [userId] = useState(
+    Cookies.get("sv_user_id") ? Cookies.get("sv_user_id") : null
+  );
   const [token] = useState(
     Cookies.get("sv_token") ? Cookies.get("sv_token") : null
   );
 
-  console.log(location.pathname)
 
   const navBars = [
     {
@@ -51,8 +53,8 @@ const AuthenticatedLayout = ({ children }) => {
   ];
 
   useEffect(() => {
-    if (user && token) {
-      dispatch({ type: "LOGIN", payload: { user: user, token: token } });
+    if (user && token && userId) {
+      dispatch({ type: "LOGIN", payload: { user: user, token: token , userId: userId} });
     } else {
       showToast(globalContext, {
         message: "You need to be Logged in to view",
