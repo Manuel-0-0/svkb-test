@@ -20,6 +20,7 @@ const AdminDashboardHome = () => {
     try {
       const response = await getCategories();
       setCategories(response.data);
+      console.log( response.data)
     } catch (err) { }
   };
 
@@ -28,6 +29,7 @@ const AdminDashboardHome = () => {
       const response = await getUserArticles({ id: Cookies.get("sv_user_id") });
       console.log(response.data)
       setArticles(response.data);
+      console.log(typeof response.data)
     } catch (err) { }
   };
 
@@ -147,7 +149,7 @@ const AdminDashboardHome = () => {
 
                         
                       </th>
-                      <td className="py-4 px-6">{article.Article.draftStatus}</td>
+                      <td className="py-4 px-6">{article.Article.draftStatus? 'Published':'Draft'}</td>
                       <td className="py-4 px-6">{article.category_name}</td>
                       <td className="py-4 px-6">{moment(article.Article.dateCreated).format('DD, MMMM YYYY')}</td>
             

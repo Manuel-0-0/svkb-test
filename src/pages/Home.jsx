@@ -13,6 +13,7 @@ const Home = () => {
     try {
       const response = await getCategories();
       setCategories(response.data);
+      console.log(typeof response.data)
     } catch (err) {}
   };
 
@@ -20,6 +21,7 @@ const Home = () => {
     try {
       const response = await getArticles();
       setArticles(response.data);
+      console.log(typeof response.data)
     } catch (err) {}
   };
 

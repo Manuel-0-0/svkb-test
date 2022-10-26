@@ -53,15 +53,16 @@ const AuthenticatedLayout = ({ children }) => {
   ];
 
   useEffect(() => {
-    if (user && token && userId) {
-      dispatch({ type: "LOGIN", payload: { user: user, token: token , userId: userId} });
-    } else {
-      showToast(globalContext, {
-        message: "You need to be Logged in to view",
-        type: "error",
-      });
-      navigate("/login");
-    }
+    // if (user && token && userId) {
+     dispatch({ type: "LOGIN", payload: { user: 'dummy' , userId: 1} });
+    // } 
+    // else {
+    //   showToast(globalContext, {
+    //     message: "You need to be Logged in to view",
+    //     type: "error",
+    //   });
+    //   navigate("/login");
+    // }
   }, []);
 
   return (
