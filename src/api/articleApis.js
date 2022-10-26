@@ -1,6 +1,6 @@
 import axiosInstance from './api'
 
-export const createArticle = (body) => axiosInstance.post('/articles/NewArticle', body)
+export const createArticle = (body) => axiosInstance.post('/articles/NewArticle', {...body})
 
 export const getArticles = () => axiosInstance.get('/articles/All')
 

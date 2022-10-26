@@ -1,6 +1,6 @@
 import axiosInstance from "./api"
 
-export const createCategory = (body) => axiosInstance.post('/category/create', body)
+export const createCategory = (body) => axiosInstance.post('/category/create', {...body})
 
 export const getCategories = () => axiosInstance.get('/category/AllCategories')
 

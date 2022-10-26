@@ -31,7 +31,7 @@ const Article = () => {
   else if (!loading && article)
     return (
       <DefaultLayout>
-        <div className="max-w-4xl mx-auto bg-white py-12 px-12 lg:px-24">
+        <div className="max-w-4xl mx-auto bg-white py-12 px-12">
           <h2 className="mt-4 uppercase tracking-widest text-xs text-gray-600">
             {moment(article?.dateCreated).format("Do MMM, YYYY")}
           </h2>

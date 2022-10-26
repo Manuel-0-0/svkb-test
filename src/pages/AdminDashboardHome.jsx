@@ -3,10 +3,10 @@ import { Link } from "react-router-dom";
 import { NewspaperIcon, TrashIcon } from "@heroicons/react/20/solid";
 import { AuthContext } from "../authContext";
 import { getCategories } from "../api/categoryApis";
-import { getUserArticles } from "../api/articleApis";
+import { getUserArticles, deleteArticle } from "../api/articleApis";
 import moment from "moment";
-import Cookies from 'js-cookie'
-// import DeleteModal from "../components/DeleteModal";
+import Cookies from "js-cookie";
+import DeleteModal from "../components/DeleteModal";
 
 import AuthenticatedLayout from "../layout/AuthenticatedLayout";
 
@@ -15,22 +15,37 @@ const AdminDashboardHome = () => {
   const [articles, setArticles] = useState();
   const [categories, setCategories] = useState();
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState();
+  const [progress, setProgress] = useState(0);
 
   const getAllCategories = async () => {
     try {
       const response = await getCategories();
       setCategories(response.data);
-      console.log( response.data)
-    } catch (err) { }
+    } catch (err) {}
   };
 
   const getAllArticles = async () => {
     try {
       const response = await getUserArticles({ id: Cookies.get("sv_user_id") });
-      console.log(response.data)
       setArticles(response.data);
-      console.log(typeof response.data)
-    } catch (err) { }
+      const published = response.data.filter(
+        (article) => article.Article.draftStatus === true
+      ).length;
+      const total = response.data.length;
+      if (published > 0 && total > 0) {
+        setProgress((published / total) * 100);
+      }
+    } catch (err) {}
+  };
+
+  const handleDeleteArticle = async () => {
+    try {
+      await deleteArticle({ id: deleteId });
+      getAllArticles();
+      setDeleteOpen(false)
+      setDeleteId(null)
+    } catch (err) {}
   };
 
   useEffect(() => {
@@ -62,14 +77,22 @@ const AdminDashboardHome = () => {
                         </p>
                       </div>
                       <div className="border-b border-gray-200 mt-6 md:mt-0 text-black font-bold text-xl">
-                        0
+                        {
+                          articles.filter(
+                            (article) => article.Article.draftStatus === true
+                          ).length
+                        }
                         <span className="text-xs text-gray-400">
                           /{articles.length} published
                         </span>
                       </div>
                     </div>
                     <div className="w-full h-3 bg-gray-100">
-                      <div className="w-4/5 h-full text-center text-xs text-white bg-green-400"></div>
+                      {progress > 0 && (
+                        <div
+                          className={`w-[${progress}%] h-full text-center text-xs text-white bg-green-400`}
+                        ></div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -133,7 +156,7 @@ const AdminDashboardHome = () => {
                     </th>
                   </tr>
                 </thead>
-                {articles.map((article) =>
+                {articles.map((article) => (
                   <tbody key={article.Article.id}>
                     <tr className="bg-white border-b">
                       <th
@@ -146,16 +169,20 @@ const AdminDashboardHome = () => {
                         >
                           {article.Article.title}
                         </Link>
-
-                        
                       </th>
-                      <td className="py-4 px-6">{article.Article.draftStatus? 'Published':'Draft'}</td>
+                      <td className="py-4 px-6">
+                        {article.Article.draftStatus ? "Published" : "Draft"}
+                      </td>
                       <td className="py-4 px-6">{article.category_name}</td>
-                      <td className="py-4 px-6">{moment(article.Article.dateCreated).format('DD, MMMM YYYY')}</td>
-            
+                      <td className="py-4 px-6">
+                        {moment(article.Article.dateCreated).format(
+                          "DD, MMMM YYYY"
+                        )}
+                      </td>
+
                       <td className="py-4 px-6 text-right flex">
                         <Link
-                          to={`/articles/$`}
+                          to={`/admin/articles/edit-article/${article.Article.id}`}
                           className="font-medium text-blue-600 hover:underline mr-4 "
                         >
                           Edit
@@ -163,25 +190,28 @@ const AdminDashboardHome = () => {
 
                         <button
                           className="font-medium text-blue-600"
-                          onClick={() => setDeleteOpen(true)}
+                          onClick={() => {
+                            setDeleteId(article.Article.id);
+                            setDeleteOpen(true);
+                          }}
                         >
                           <TrashIcon className="w-5 h-5" />
                         </button>
                       </td>
                     </tr>
-                  </tbody>)}
-
+                  </tbody>
+                ))}
               </table>
             </div>
-            {/* <DeleteModal
-          open={deleteOpen}
-          setOpen={setDeleteOpen}
-          handleConfirmDelete={handleDeleteArticle}
-          deleteMessage={
-            "Are you sure you want to delete this Article? it cannot be recovered afterwards"
-          }
-          deleteTitle={"Delete Article"}
-        /> */}
+            <DeleteModal
+              open={deleteOpen}
+              setOpen={setDeleteOpen}
+              handleConfirmDelete={handleDeleteArticle}
+              deleteMessage={
+                "Are you sure you want to delete this Article? it cannot be recovered afterwards"
+              }
+              deleteTitle={"Delete Article"}
+            />
           </div>
         ) : null}
       </>

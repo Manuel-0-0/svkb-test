@@ -42,7 +42,7 @@ const Home = () => {
         <div className="lg:flex lg:items-center lg:justify-center mb-14 w-full">
           <div className="grid grid-cols-1 gap-16 md:grid-cols-2 lg:grid-cols-3 px-4 md:px-6 w-9/12 mx-auto">
             {articles.length > 0 ? (
-              articles.map((article) => (
+              articles.slice(0,6).map((article) => (
                 <ArticleCard key={article.Article.id} article={article.Article} />
               ))
             ) : (
@@ -60,7 +60,7 @@ const Home = () => {
           </div>
           <div className="grid grid-cols-1 gap-16 md:grid-cols-2 lg:grid-cols-3 px-4 md:px-6 w-9/12 mx-auto text-[#324299] font-bold  text-lg">
             {categories.length > 0 ? (
-              categories.map((category) => (
+              categories.slice(0,9).map((category) => (
                 <Link
                   key={category.id}
                   to="/category"

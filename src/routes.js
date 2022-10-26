@@ -12,6 +12,4 @@ export const Articles = lazy(() => import('./pages/Articles'))
 
 export const Login = lazy(() => import('./pages/Login'))
 
-export const AdminDashboardHome = lazy(() => import('./pages/AdminDashboardHome'))
-
 export const NotFound = lazy(() => import('./pages/404'))

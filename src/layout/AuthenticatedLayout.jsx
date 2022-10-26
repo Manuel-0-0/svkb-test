@@ -10,9 +10,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../authContext";
 import { GlobalContext, showToast } from "../globalContext";
 import Cookies from "js-cookie";
-// import DashboardHome from "../components/DashboardHome";
-// import AdminDashboardArticle from "../components/AdminDashboardArticle";
-// import AdminDashboardCategory from "../components/AdminDashboardCategory";
 
 const AuthenticatedLayout = ({ children }) => {
   const location = useLocation();
@@ -29,40 +26,40 @@ const AuthenticatedLayout = ({ children }) => {
     Cookies.get("sv_token") ? Cookies.get("sv_token") : null
   );
 
-
   const navBars = [
     {
       name: "Home",
-      //   component: <DashboardHome />,
       icon: <HomeIcon className="h-5 w-5" />,
       active: location.pathname === "/admin/home",
       path: "/admin/home",
     },
     {
       name: "Category",
-      //   component: <AdminDashboardCategory />,
       icon: <Square3Stack3DIcon className="h-5 w-5" />,
       path: "/admin/category",
+      active: location.pathname.startsWith("/admin/category")
     },
     {
       name: "Article",
-      //   component: <AdminDashboardArticle />,
       icon: <NewspaperIcon className="h-5 w-5" />,
       path: "/admin/article",
+      active: location.pathname.startsWith("/admin/article"),
     },
   ];
 
   useEffect(() => {
-    // if (user && token && userId) {
-     dispatch({ type: "LOGIN", payload: { user: 'dummy' , userId: 1} });
-    // } 
-    // else {
-    //   showToast(globalContext, {
-    //     message: "You need to be Logged in to view",
-    //     type: "error",
-    //   });
-    //   navigate("/login");
-    // }
+    if (user && token && userId) {
+      dispatch({
+        type: "LOGIN",
+        payload: { user: user, token: token, userId: userId },
+      });
+    } else {
+      showToast(globalContext, {
+        message: "You need to be Logged in to view",
+        type: "error",
+      });
+      navigate("/login");
+    }
   }, []);
 
   return (
