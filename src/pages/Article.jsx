@@ -2,15 +2,23 @@ import React, { useState, useEffect, useContext } from "react";
 import DefaultLayout from "../layout/DefaultLayout";
 import { useParams, useNavigate } from "react-router-dom";
 import moment from "moment";
-import { PencilSquareIcon, TrashIcon } from "@heroicons/react/20/solid";
+import { GlobalContext, showToast } from "../globalContext";
+import {
+  PencilSquareIcon,
+  TrashIcon,
+  ClipboardDocumentCheckIcon,
+} from "@heroicons/react/20/solid";
 import parse from "html-react-parser";
 import Loading from "../components/Loading";
 import { getArticle } from "../api/articleApis";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 
 const Article = () => {
   const { articleId } = useParams();
+  const { dispatch: globalDispatch } = useContext(GlobalContext);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const copiedText = window.location.href;
 
   const [article, setArticle] = useState();
 
@@ -23,6 +31,13 @@ const Article = () => {
     } catch (err) {}
   };
 
+  const handleShowToast = () => {
+    showToast(globalDispatch, {
+      message: "Copied!",
+      type: "success",
+    });
+  };
+
   useEffect(() => {
     getSingleArticle();
   }, [articleId]);
@@ -32,9 +47,15 @@ const Article = () => {
     return (
       <DefaultLayout>
         <div className="max-w-4xl mx-auto bg-white py-12 px-12">
-          <h2 className="mt-4 uppercase tracking-widest text-xs text-gray-600">
-            {moment(article?.dateCreated).format("Do MMM, YYYY")}
-          </h2>
+          <div className="flex ">
+            <h2 className="mt-4 uppercase tracking-widest text-xs text-gray-600">
+              {moment(article?.dateCreated).format("Do MMM, YYYY")}
+            </h2>
+            <CopyToClipboard text={copiedText} onCopy={() => handleShowToast()}>
+              <ClipboardDocumentCheckIcon className="h-6 w-6 cursor" />
+            </CopyToClipboard>
+          </div>
+
           <h1 className="font-display text-2xl md:text-3xl text-gray-900 mt-4 flex">
             {article?.title}
           </h1>

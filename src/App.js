@@ -6,6 +6,7 @@ import AdminDashboardHome from "./pages/AdminDashboardHome";
 import AdminDashboardCreateArticle from "./pages/AdminDashboardCreateArticle";
 import AdminDashboardCreateCategory from "./pages/AdminDashboardCreateCategory";
 import AdminDashboardCategory from "./pages/AdminDashboardCategory";
+import AdminDashboardAddUser from "./pages/AdminDashboardAddUser"
 import Loading from "./components/Loading";
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
           <Route path="/category/:categoryId" element={<Category />} />
           
           <Route path="/dashboard" element={<Dashboard/>} /> */}
+          <Route path="/admin/user/create" element={<AdminDashboardAddUser />} />
           <Route path="/admin/article" element={<AdminDashboardArticle />} />
           <Route path="/admin/article/create" element={<AdminDashboardCreateArticle />} />
           <Route path="/admin/category" element={<AdminDashboardCategory />} />

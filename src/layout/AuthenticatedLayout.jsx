@@ -5,6 +5,7 @@ import {
   HomeIcon,
   NewspaperIcon,
   Square3Stack3DIcon,
+  UserCircleIcon
 } from "@heroicons/react/20/solid";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../authContext";
@@ -36,7 +37,7 @@ const AuthenticatedLayout = ({ children }) => {
     {
       name: "Category",
       icon: <Square3Stack3DIcon className="h-5 w-5" />,
-      path: "/admin/category",
+      path: "/admin/category/create",
       active: location.pathname.startsWith("/admin/category")
     },
     {
@@ -45,6 +46,12 @@ const AuthenticatedLayout = ({ children }) => {
       path: "/admin/article",
       active: location.pathname.startsWith("/admin/article"),
     },
+    {
+      name: "Create User",
+      icon: <UserCircleIcon className="h-5 w-5" />,
+      path: "/admin/user/create",
+      active: location.pathname.startsWith("/admin/user"),
+    }
   ];
 
   useEffect(() => {
