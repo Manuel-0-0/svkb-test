@@ -4,6 +4,10 @@ export const createArticle = (body) => axiosInstance.post('/articles/NewArticle'
 
 export const getArticles = () => axiosInstance.get('/articles/All')
 
+export const getPublishedArticles = () => axiosInstance.get('/articles/All?draftStatus=false')
+
+export const getDraftArticles = () => axiosInstance.get('/articles/All?draftStatus=true')
+
 export const getArticle = ({ id }) => axiosInstance.get(`/articles/${id}`)
 
 export const getArticleInCategory = ({ id }) => axiosInstance.get(`/articles/?CategoryId=${id}`)

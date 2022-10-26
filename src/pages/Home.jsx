@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { getCategories } from "../api/categoryApis";
-import { getArticles } from "../api/articleApis";
+import { getPublishedArticles } from "../api/articleApis";
 import DefaultLayout from "../layout/DefaultLayout";
 import ArticleCard from "../components/ArticleCard";
 
@@ -13,15 +13,15 @@ const Home = () => {
     try {
       const response = await getCategories();
       setCategories(response.data);
-      console.log(typeof response.data)
+      console.log(typeof response.data);
     } catch (err) {}
   };
 
   const getAllArticles = async () => {
     try {
-      const response = await getArticles();
+      const response = await getPublishedArticles();
       setArticles(response.data);
-      console.log(typeof response.data)
+      console.log(typeof response.data);
     } catch (err) {}
   };
 
@@ -42,9 +42,14 @@ const Home = () => {
         <div className="lg:flex lg:items-center lg:justify-center mb-14 w-full">
           <div className="grid grid-cols-1 gap-16 md:grid-cols-2 lg:grid-cols-3 px-4 md:px-6 w-9/12 mx-auto">
             {articles.length > 0 ? (
-              articles.slice(0,6).map((article) => (
-                <ArticleCard key={article.Article.id} article={article.Article} />
-              ))
+              articles
+                .slice(0, 6)
+                .map((article) => (
+                  <ArticleCard
+                    key={article.Article.id}
+                    article={article.Article}
+                  />
+                ))
             ) : (
               <p className="text-xl text-gray-600 mb-2">
                 Sorry no articles to show{" "}
@@ -60,7 +65,7 @@ const Home = () => {
           </div>
           <div className="grid grid-cols-1 gap-16 md:grid-cols-2 lg:grid-cols-3 px-4 md:px-6 w-9/12 mx-auto text-[#324299] font-bold  text-lg">
             {categories.length > 0 ? (
-              categories.slice(0,9).map((category) => (
+              categories.slice(0, 9).map((category) => (
                 <Link
                   key={category.id}
                   to="/category"
