@@ -1,33 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { createCategory } from "../api/categoryApis";
+import { GlobalContext, showToast } from "../globalContext";
 import CreateLayout from "../layout/CreateLayout";
 
 const CreateCategory = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const { dispatch: globalDispatch } = useContext(GlobalContext);
   const [categoryName, setCategoryName] = useState("");
 
   const createNewCategory = async () => {
     try {
       setLoading(true);
-      await createCategory({ CategoryName: categoryName }).unwrap();
-      setCategoryName("");
-      // dispatch(
-      //   addToast({
-      //     message: "Category Created successfully",
-      //     messageType: "success",
-      //   })
-      // );
+      await createCategory({ CategoryName: categoryName })
       setLoading(false);
+      setCategoryName("");
+      showToast(globalDispatch, {
+        message: "Category Created!",
+        type: "success",
+      });
+    
+      navigate("/admin/home");
     } catch (err) {
       const error = err.data?.error || err.data;
-      // dispatch(
-      //   addToast({
-      //     message: error,
-      //     messageType: "error",
-      //   })
-      // );
+      showToast(globalDispatch, {
+        message: error,
+        type: "error",
+      });
     }
   };
 

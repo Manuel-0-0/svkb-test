@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import ReactQuill from "react-quill";
 import { getCategories } from "../api/categoryApis";
@@ -6,10 +6,12 @@ import { createArticle } from "../api/articleApis";
 import { convertToHtml } from "mammoth/mammoth.browser";
 import "react-quill/dist/quill.snow.css";
 import DropDown from "./DropDown";
+import { GlobalContext, showToast } from "../globalContext";
 import { formats, modules } from "../utilities/Editor";
 import CreateLayout from "../layout/CreateLayout";
 
 const CreateArticle = () => {
+  const { dispatch: globalDispatch } = useContext(GlobalContext);
   const navigate = useNavigate();
   const [category, setCategory] = useState();
   const [categories, setCategories] = useState();
@@ -63,8 +65,18 @@ const CreateArticle = () => {
         });
         setTitle("");
         setContent("");
+
+        showToast(globalDispatch, {
+          message:" Article created Successfully",
+          type: "success",
+        });
+        navigate("/admin/home");
       } catch (err) {
         const error = err.data?.error || err.data;
+        showToast(globalDispatch, {
+          message: error,
+          type: "error",
+        });
       }
     }
   };
@@ -117,30 +129,33 @@ const CreateArticle = () => {
               onChange={setContent}
             />
           </div>
-          <div className="relative flex items-center mb-6 w-fit h-full">
-            <button
-              disabled={!canSave}
-              onClick={() => createNewArticle("True")}
-              type="button"
-              className="text-white mr-4 bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center my-4"
-            >
-              Save to drafts
-            </button>
-            <button
-              disabled={!canSave}
-              onClick={()=>createNewArticle("False")}
-              type="button"
-              className="text-white mr-4 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center my-4"
-            >
-              Publish
-            </button>
-            <input
+          <div>
+          <input
               accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
               className="block w-full p-2 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer"
               type="file"
               onChange={(e) => handleChange(e)}
             />
             <p class="mt-1 text-sm text-gray-500">.doc, .docx.</p>
+          </div>
+          <div className="relative flex items-center mb-6 w-fit h-full">
+            <button
+              disabled={!canSave}
+              onClick={() => createNewArticle("True")}
+              type="button"
+              className="text-white mr-4 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center my-4"
+              >
+              Publish
+            </button>
+            <button
+              disabled={!canSave}
+              onClick={()=>createNewArticle("False")}
+              type="button" 
+            className="text-white mr-4 bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center my-4"
+            >
+              Save as Draft
+            </button>
+            
           </div>
         </>
       )}
