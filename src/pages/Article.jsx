@@ -4,8 +4,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import moment from "moment";
 import { GlobalContext, showToast } from "../globalContext";
 import {
-  PencilSquareIcon,
-  TrashIcon,
   ClipboardDocumentCheckIcon,
 } from "@heroicons/react/20/solid";
 import parse from "html-react-parser";
@@ -47,12 +45,12 @@ const Article = () => {
     return (
       <DefaultLayout>
         <div className="max-w-4xl mx-auto bg-white py-12 px-12">
-          <div className="flex ">
+          <div className="flex items-center">
             <h2 className="mt-4 uppercase tracking-widest text-xs text-gray-600">
               {moment(article?.dateCreated).format("Do MMM, YYYY")}
             </h2>
             <CopyToClipboard text={copiedText} onCopy={() => handleShowToast()}>
-              <ClipboardDocumentCheckIcon className="h-6 w-6 cursor" />
+              <ClipboardDocumentCheckIcon className="h-6 my-auto w-6 text-gray-500 cursor" />
             </CopyToClipboard>
           </div>
 

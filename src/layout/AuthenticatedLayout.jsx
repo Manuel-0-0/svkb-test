@@ -5,18 +5,21 @@ import {
   HomeIcon,
   NewspaperIcon,
   Square3Stack3DIcon,
-  UserCircleIcon
+  UserCircleIcon,
+  ArrowLeftOnRectangleIcon,
 } from "@heroicons/react/20/solid";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../authContext";
 import { GlobalContext, showToast } from "../globalContext";
 import Cookies from "js-cookie";
+import Modal from "../components/Modal";
 
 const AuthenticatedLayout = ({ children }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { dispatch } = useContext(AuthContext);
   const { dispatch: globalContext } = useContext(GlobalContext);
+  const [modal, showModal] = useState(false);
   const [user] = useState(
     Cookies.get("sv_user") ? Cookies.get("sv_user") : null
   );
@@ -26,6 +29,15 @@ const AuthenticatedLayout = ({ children }) => {
   const [token] = useState(
     Cookies.get("sv_token") ? Cookies.get("sv_token") : null
   );
+
+  const handleLogout = () => {
+    dispatch({ type: "LOGOUT" });
+    showToast(globalContext, {
+      message: "Logout Successful!",
+      type: "success",
+    });
+    navigate("/login");
+  };
 
   const navBars = [
     {
@@ -38,7 +50,7 @@ const AuthenticatedLayout = ({ children }) => {
       name: "Category",
       icon: <Square3Stack3DIcon className="h-5 w-5" />,
       path: "/admin/category/create",
-      active: location.pathname.startsWith("/admin/category")
+      active: location.pathname.startsWith("/admin/category"),
     },
     {
       name: "Article",
@@ -51,7 +63,7 @@ const AuthenticatedLayout = ({ children }) => {
       icon: <UserCircleIcon className="h-5 w-5" />,
       path: "/admin/user/create",
       active: location.pathname.startsWith("/admin/user"),
-    }
+    },
   ];
 
   useEffect(() => {
@@ -96,16 +108,32 @@ const AuthenticatedLayout = ({ children }) => {
                     </span>
                   </button>
                 ))}
+                <button
+                  className={`w-full text-white flex items-center pl-6 p-2 my-2 transition-colors duration-200 justify-start`}
+                  onClick={() => {
+                    showModal(true);
+                  }}
+                >
+                  <ArrowLeftOnRectangleIcon className="h-5 w-5" />
+                  <span className="mx-2 text-sm font-normal">Logout</span>
+                </button>
               </div>
             </nav>
           </div>
         </div>
-
         <div className="flex flex-col w-full md:space-y-4">
           <div className="w-full pb-10 bg-gray-100 px-5 py-10 min-h-[98vh] max-h-[98vh] overflow-y-auto">
             {children}
           </div>
         </div>
+        <Modal
+          handleConfirm={handleLogout}
+          open={modal}
+          setOpen={showModal}
+          confirmButton="Yes, logout"
+          message="Are you sure you want to log out?"
+          messageTitle="Confirm Logout"
+        />
       </div>
     </main>
   );
