@@ -67,7 +67,7 @@ const CreateArticle = () => {
         setContent("");
 
         showToast(globalDispatch, {
-          message:" Article created Successfully",
+          message: " Article created Successfully",
           type: "success",
         });
         navigate("/admin/home");
@@ -75,6 +75,23 @@ const CreateArticle = () => {
         const error = err.data?.error || err.data;
         showToast(globalDispatch, {
           message: error,
+          type: "error",
+        });
+      }
+    } else {
+      if (!category.id) {
+        showToast(globalDispatch, {
+          message: "Please select a category",
+          type: "error",
+        });
+      } else if (!title) {
+        showToast(globalDispatch, {
+          message: "Please Add a title",
+          type: "error",
+        });
+      } else {
+        showToast(globalDispatch, {
+          message: "Please add a content",
           type: "error",
         });
       }
@@ -130,7 +147,7 @@ const CreateArticle = () => {
             />
           </div>
           <div>
-          <input
+            <input
               accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
               className="block w-full p-2 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer"
               type="file"
@@ -140,22 +157,19 @@ const CreateArticle = () => {
           </div>
           <div className="relative flex items-center mb-6 w-fit h-full">
             <button
-              disabled={!canSave}
               onClick={() => createNewArticle("True")}
               type="button"
               className="text-white mr-4 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center my-4"
-              >
+            >
               Publish
             </button>
             <button
-              disabled={!canSave}
-              onClick={()=>createNewArticle("False")}
-              type="button" 
-            className="text-white mr-4 bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center my-4"
+              onClick={() => createNewArticle("False")}
+              type="button"
+              className="text-white mr-4 bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center my-4"
             >
               Save as Draft
             </button>
-            
           </div>
         </>
       )}

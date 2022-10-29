@@ -12,7 +12,7 @@ export const getArticle = ({ id }) => axiosInstance.get(`/articles/${id}`)
 
 export const getArticleInCategory = ({ id }) => axiosInstance.get(`/articles/?CategoryId=${id}`)
 
-export const updateArticle = ({ id, body }) => axiosInstance.put(`/articles/Update//${id}`, { ...body })
+export const updateArticle = ({ id, body }) => axiosInstance.put(`/articles/Update/${id}`, { ...body })
 
 export const deleteArticle = ({ id }) => axiosInstance.delete(`/articles/Delete/${id}`)
 

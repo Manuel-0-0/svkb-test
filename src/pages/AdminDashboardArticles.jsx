@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { getArticles, searchForArticle } from "../api/articleApis";
 import Table from "../components/Table";
 import AuthenticatedLayout from "../layout/AuthenticatedLayout";
+import DeleteModal from "../components/DeleteModal";
 
 const AdminDashboardArticle = () => {
   const navigate = useNavigate();
@@ -80,7 +81,7 @@ const AdminDashboardArticle = () => {
           <div className="mt-4">
             <Table
               headers={[
-                { name: "Article Name", id: "title", link: "articles" },
+                { name: "Article Name", id: "title", link: "admin/article" },
                 { name: "Date Created", id: "dateCreated" },
                 { name: "Category", id: "category_name", link: "category" },
               ]}
