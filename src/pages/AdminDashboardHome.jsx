@@ -164,7 +164,7 @@ const AdminDashboardHome = () => {
                         className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap"
                       >
                         <Link
-                          to={`/articles/${article.Article.id}`}
+                          to={`/admin/article/${article.Article.id}`}
                           className="font-medium text-blue-600 hover:underline mr-4 "
                         >
                           {article.Article.title}

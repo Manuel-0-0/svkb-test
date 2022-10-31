@@ -111,6 +111,11 @@ const Footer = () => {
                       Articles
                     </Link>
                   </li>
+                  <li className="my-2">
+                    <Link to="/login" className="hover:underline">
+                      Login
+                    </Link>
+                  </li>
                   <li>
                     <button onClick={() => setOpen(true)}>Contact us</button>
                   </li>

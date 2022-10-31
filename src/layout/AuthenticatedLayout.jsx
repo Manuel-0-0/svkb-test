@@ -58,12 +58,12 @@ const AuthenticatedLayout = ({ children }) => {
       path: "/admin/article",
       active: location.pathname.startsWith("/admin/article"),
     },
-    {
-      name: "Create User",
-      icon: <UserCircleIcon className="h-5 w-5" />,
-      path: "/admin/user/create",
-      active: location.pathname.startsWith("/admin/user"),
-    },
+    // {
+    //   name: "Create User",
+    //   icon: <UserCircleIcon className="h-5 w-5" />,
+    //   path: "/admin/user/create",
+    //   active: location.pathname.startsWith("/admin/user"),
+    // },
   ];
 
   useEffect(() => {
