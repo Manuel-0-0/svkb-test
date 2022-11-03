@@ -182,7 +182,7 @@ const AdminDashboardHome = () => {
 
                       <td className="py-4 px-6 text-right flex">
                         <Link
-                          to={`/admin/articles/edit/${article.Article.id}`}
+                          to={`/admin/article/edit/${article.Article.id}`}
                           className="font-medium text-blue-600 hover:underline mr-4 "
                         >
                           Edit
