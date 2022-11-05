@@ -91,9 +91,10 @@ const Categories = () => {
                 {
                   name: "Category Name",
                   id: "categoryName",
-                  link: "admin/category",
+                  link: "category",
                 },
                 { name: "Articles In Category", id: "articleNum" },
+                {name: "Date Created", id:"dateCreated"}
               ]}
               articles={filteredCategories}
             />

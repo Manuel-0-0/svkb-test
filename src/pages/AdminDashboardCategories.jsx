@@ -101,6 +101,7 @@ const AdminDashboardCategories = () => {
                   link: "admin/category",
                 },
                 { name: "Articles In Category", id: "articleNum" },
+                {name: "Date Created", id:"dateCreated"}
               ]}
               articles={filteredCategories}
             />
