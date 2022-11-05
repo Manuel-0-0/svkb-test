@@ -32,7 +32,7 @@ const Footer = () => {
                   </li>
                   <li className="my-2">
                     <Link to="/login" className="hover:underline">
-                      Login
+                      Admin Login
                     </Link>
                   </li>
                   <li>

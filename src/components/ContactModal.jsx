@@ -71,7 +71,7 @@ const ContactModal = ({ modal, onModalClose }) => {
               <div className="text-lg font-semibold mb-3">
                 Send us an Email
                 <span className="text-sm font-normal">  or  </span>{" "}
-                  Put in a Service
+                  Put in a Service Ticket
               </div>
               <hr className="w-1/2 mx-auto" />
               <div className="w-full flex justify-center mt-3 items-center flex-col">
