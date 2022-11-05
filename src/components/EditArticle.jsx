@@ -135,7 +135,6 @@ const EditArticle = () => {
       }
     }
   };
-  
 
   useEffect(() => {
     getSingleArticle();
@@ -195,13 +194,21 @@ const EditArticle = () => {
               Edit Article
             </button>
             <div>
+              <label
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                for="file_input"
+              >
+                Upload file
+              </label>
               <input
                 accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                className="block w-full p-2 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer"
-                type="file"
                 onChange={(e) => handleChange(e)}
+                className="text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer focus:outline-none"
+                type="file"
               />
-              <p class="mt-1 text-sm text-gray-500">.doc, .docx.</p>
+              <p className="mt-1 text-sm text-gray-500 dark:text-gray-300">
+                .doc, .docx.
+              </p>
             </div>
           </div>
         </>
