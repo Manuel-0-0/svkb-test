@@ -32,7 +32,7 @@ const AdminDashboardArticle = () => {
     try {
       await deleteArticle({ id: articleId });
       setDeleteOpen(false);
-      navigate("/admin/articles");
+      navigate("/admin/article");
     } catch (err) {
       const error = getErrorMessage(err);
       showToast(globalDispatch, {
