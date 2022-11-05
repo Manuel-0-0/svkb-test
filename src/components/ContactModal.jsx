@@ -65,8 +65,11 @@ const ContactModal = ({ modal, onModalClose }) => {
                 </div>
               </div>
               <div className="text-lg font-semibold mb-3">
-                Send us an Email <span className="text-sm font-normal">or</span> Put in a
-                Service
+                <a href="mailto:it@sunvalley.com">Send us an Email</a>{" "}
+                <span className="text-sm font-normal">or</span>{" "}
+                <a href="https://sinclairoil.atlassian.net/servicedesk/customer/user/login?destination=portals">
+                  Put in a Service
+                </a>
               </div>
               <hr className="w-1/2 mx-auto" />
               <div className="w-full flex justify-center mt-3 items-center flex-col">
@@ -76,7 +79,7 @@ const ContactModal = ({ modal, onModalClose }) => {
                     alt=""
                   />
                 </div>
-                <p className="py-3 text-sm">Call Using xxx.xxx.xxx</p>
+                <p className="py-3 text-sm">Call Using +1 (208) 622 2044 </p>
               </div>
             </div>
           </Transition.Child>

@@ -1,13 +1,13 @@
-import React, { useContext } from "react";
+import React, { useState } from "react";
 import { Disclosure, Transition } from "@headlessui/react";
 import {
   Bars4Icon,
   XMarkIcon,
-  UserCircleIcon,
 } from "@heroicons/react/24/outline";
 import { useLocation, Link } from "react-router-dom";
 import Icon from "../utilities/icons/SunValley";
 import Cookies from "js-cookie";
+import ContactModal from "./ContactModal";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -15,6 +15,11 @@ function classNames(...classes) {
 
 const Header = () => {
   const location = useLocation();
+  const [modalOpen, setModalOpen] = useState(false)
+
+  const onModalClose = () =>{
+    setModalOpen(false)
+  }
   const user = Cookies.get("sv_user");
   let navigation = [
     {
@@ -85,7 +90,9 @@ const Header = () => {
                             {item.name}
                           </Link>
                         </div>
+                        
                       ))}
+                      <button className="text-white bg-blue-500 py-2 px-4 rounded hover:bg-blue-400" onClick={()=> setModalOpen(true)}>Contact Us</button>
                     </div>
                   </div>
                 </div>
@@ -124,11 +131,13 @@ const Header = () => {
                           {item.name}
                         </Disclosure.Button>
                       </Link>
+                      <button onClick={()=> setModalOpen(true)}>Contact Us</button>
                     </div>
                   ))}
                 </div>
               </Disclosure.Panel>
             </Transition>
+            <ContactModal modal={modalOpen} onModalClose={onModalClose} />
           </>
         )}
       </Disclosure>

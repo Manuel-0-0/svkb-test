@@ -49,7 +49,7 @@ const Categories = () => {
       <Helmet>
         <title>Categories | SunValley</title>
       </Helmet>
-      <div className="w-11/12 mx-auto my-6 p-6 rounded bg-white border">
+      <div className="w-11/12 mx-auto my-6 p-6 rounded bg-white">
         <div className="w-full mx-auto px-2 py-6">
           <label
             htmlFor="default-search"
