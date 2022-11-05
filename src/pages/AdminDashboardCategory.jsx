@@ -6,15 +6,18 @@ import DeleteModal from "../components/DeleteModal";
 import { useNavigate } from "react-router-dom";
 import { TrashIcon, PencilSquareIcon } from "@heroicons/react/20/solid";
 import { getCategory, deleteCategory } from "../api/categoryApis";
+import { getArticleInCategory} from "../api/articleApis"
 import { Helmet } from "react-helmet";
 import { getErrorMessage } from "../utilities/functions";
 import { GlobalContext, showToast } from "../globalContext";
+import CategoryArticles from "../components/CategoryArticles"
 
 const AdminDashbordCategory = () => {
   const { categoryId } = useParams();
   const [loading, setLoading] = useState(false);
   const [category, setCategory] = useState();
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [categoryArticles, setCategoryArticles] = useState([])
   const { dispatch: globalDispatch } = useContext(GlobalContext);
   const navigate = useNavigate();
 
@@ -47,9 +50,22 @@ const AdminDashbordCategory = () => {
     }
   };
 
+  const getCategoryArticles = async () => {
+    try {
+      const response = await getArticleInCategory({ id: categoryId });
+      setCategoryArticles(response.data);
+    } catch (err) {
+      const error = getErrorMessage(err);
+      showToast(globalDispatch, {
+        message: error,
+        type: "error",
+      });
+    }
+  };
+
   useEffect(() => {
-    getSingleCategory();
-  }, [categoryId]);
+    Promise.all([getSingleCategory(), getCategoryArticles()]);
+  }, []);
 
   if (loading) return <Loading />;
   else if (!loading && category)
@@ -81,7 +97,9 @@ const AdminDashbordCategory = () => {
               Number of Articles: {category.articleNum}
             </p>
           </div>
+           
         </div>
+        <CategoryArticles articles={categoryArticles} />
         <DeleteModal
           open={deleteOpen}
           setOpen={setDeleteOpen}

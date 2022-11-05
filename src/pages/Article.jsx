@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import Loading from "../components/Loading";
 import { getArticle } from "../api/articleApis";
 import ArticleView from "../components/ArticleView";
+import { Helmet } from "react-helmet";
 
 const Article = () => {
   const { articleId } = useParams();
@@ -27,7 +28,12 @@ const Article = () => {
   else if (!loading && article)
     return (
       <DefaultLayout>
-        <ArticleView article={article} />
+        <Helmet>
+          <title>{article?.title} | SunValley</title>
+        </Helmet>
+        <div className="w-full pb-10 bg-gray-100 px-5 py-10">
+          <ArticleView article={article} />
+        </div>
       </DefaultLayout>
     );
 };

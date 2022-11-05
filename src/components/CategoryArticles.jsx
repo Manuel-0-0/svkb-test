@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import parse from "html-react-parser";
 
 const CategoryArticles = ({ articles }) => {
-    console.log(articles)
   return (
     <>
       {articles && articles.length > 0 ? (

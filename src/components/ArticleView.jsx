@@ -17,7 +17,7 @@ const ArticleView = ({ article }) => {
   };
 
   return (
-    <div className="lg:w-1/2 mx-auto mt-10">
+    <div className="lg:w-4/5 mx-auto mt-10">
       <div className="flex items-center">
         <h2 className="mt-4 uppercase tracking-widest text-xs text-gray-600 mr-4">
           {moment(article?.dateCreated).format("Do MMM, YYYY")}
@@ -31,7 +31,7 @@ const ArticleView = ({ article }) => {
         {article?.title}
       </h1>
       <div className="prose prose-base sm:prose-lg lg:prose-xl mt-6 w-full">
-        <p data-color-mode="light"> {parse(`${article?.content}`)}</p>
+        <p data-color-mode="light" className="normal-case"> {parse(`${article?.content}`)}</p>
       </div>
     </div>
   );

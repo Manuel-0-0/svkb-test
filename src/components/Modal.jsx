@@ -1,4 +1,4 @@
-import { Fragment, useRef} from "react";
+import { Fragment, useRef } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 
@@ -6,11 +6,12 @@ const Modal = ({
   open,
   setOpen,
   confirmButton,
+  secondButton,
+  secondButtonConfirm,
   handleConfirm,
   message,
   messageTitle,
 }) => {
-
   const cancelButtonRef = useRef(null);
 
   return (
@@ -77,10 +78,12 @@ const Modal = ({
                   <button
                     type="button"
                     className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-                    onClick={() => setOpen(false)}
+                    onClick={() =>
+                      secondButton ? secondButtonConfirm() : setOpen(false)
+                    }
                     ref={cancelButtonRef}
                   >
-                    Cancel
+                    {secondButton ? secondButton : "Cancel"}
                   </button>
                 </div>
               </Dialog.Panel>

@@ -78,7 +78,36 @@ const EditArticle = () => {
     }
   };
 
-  const editArticle = async () => {
+  const publishArticle = async () => {
+    if (canSave) {
+      try {
+        await updateArticle({
+          id: articleId,
+          body: {
+            title: title,
+            content: content,
+            draftStatus: "True",
+          },
+        });
+        setEditOpen(false);
+        setTitle("");
+        setContent("");
+        showToast(globalDispatch, {
+          message: "Article Edited Successfully",
+          type: "success",
+        });
+        navigate(`/admin/article/${articleId}`);
+      } catch (err) {
+        const error = getErrorMessage(err);
+        showToast(globalDispatch, {
+          message: error,
+          type: "error",
+        });
+      }
+    }
+  };
+
+  const draftArticle = async () => {
     if (canSave) {
       try {
         await updateArticle({
@@ -106,6 +135,7 @@ const EditArticle = () => {
       }
     }
   };
+  
 
   useEffect(() => {
     getSingleArticle();
@@ -181,10 +211,12 @@ const EditArticle = () => {
       <Modal
         open={editOpen}
         setOpen={setEditOpen}
-        handleConfirm={editArticle}
-        message="After saving, article status will change to draft and you will be required to publish again. Proceed?"
+        handleConfirm={publishArticle}
+        secondButton="Draft Article"
+        secondButtonConfirm={draftArticle}
+        message="Are you sure you want to edit this article?"
         messageTitle="Confirm Edit"
-        confirmButton="Edit Article"
+        confirmButton="Publish Article"
       />
       <DeleteModal
         open={deleteOpen}

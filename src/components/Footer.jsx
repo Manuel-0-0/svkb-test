@@ -8,10 +8,10 @@ const Footer = () => {
   const onModalClose = () => setOpen(false);
   return (
     <>
-      <div className=" bg-[#324299] overflow-hidden">
+      <div className="bg-[#324299] overflow-hidden">
         <div className="divide-y divide-white">
           <div className="lg:w-10/12 lg:mx-auto text-white">
-            <div className="flex flex-col py-10 px-8 sm:grid sm:grid-cols-2 sm:gap-4 mt-12">
+            <div className="flex flex-col py-6 px-8 sm:grid sm:grid-cols-2 sm:gap-4 mt-12">
               <div>
                 <p className="font-bold mb-2">it@sunvalley.com</p>
                 <p className="font-bold mb-2">+1 ( 208 ) 622 2044 </p>
@@ -41,7 +41,7 @@ const Footer = () => {
                 </ul>
               </div>
             </div>
-            <div className="sm:flex px-8 sm:justify-between py-6">
+            <div className="sm:flex px-8 sm:justify-between py-2">
               <div>
                 <p className="whitespace-nowrap my-4">
                   &copy; Copyright SV KB 2022

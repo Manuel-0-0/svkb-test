@@ -18,7 +18,6 @@ const AdminDashboardCategories = () => {
   const getAllCategories = async () => {
     try {
       const response = await getCategories();
-      console.log(response.data);
       setCategories(response.data);
       setFilteredCategories(response.data);
     } catch (err) {

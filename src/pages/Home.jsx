@@ -1,28 +1,41 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import { getCategories } from "../api/categoryApis";
 import { getPublishedArticles } from "../api/articleApis";
 import DefaultLayout from "../layout/DefaultLayout";
 import ArticleCard from "../components/ArticleCard";
+import { GlobalContext, showToast } from "../globalContext";
+import { getErrorMessage } from "../utilities/functions";
 
 const Home = () => {
   const [categories, setCategories] = useState([]);
+  const { dispatch: globalDispatch } = useContext(GlobalContext);
   const [articles, setArticles] = useState([]);
 
   const getAllCategories = async () => {
     try {
-      const response = await getCategories({page: 0, limit: 6});
+      const response = await getCategories({ page: 0, limit: 6 });
       setCategories(response.data);
-      console.log(typeof response.data);
-    } catch (err) {}
+    } catch (err) {
+      const error = getErrorMessage(err);
+      showToast(globalDispatch, {
+        message: error,
+        type: "error",
+      });
+    }
   };
 
   const getAllArticles = async () => {
     try {
-      const response = await getPublishedArticles({page: 0, limit: 6});
+      const response = await getPublishedArticles({ page: 0, limit: 6 });
       setArticles(response.data);
-      console.log(typeof response.data);
-    } catch (err) {}
+    } catch (err) {
+      const error = getErrorMessage(err);
+      showToast(globalDispatch, {
+        message: error,
+        type: "error",
+      });
+    }
   };
 
   useEffect(() => {
@@ -35,7 +48,7 @@ const Home = () => {
       <div className="h-full flex mt-10 md:mt-10 flex-col items-center">
         <div className="grid justify-items-center px-4 md:px-16 mb-10 w-full">
           <h1 className="text-2xl md:text-2xl font-bold leading-tight text-left mb-2 md:mb-8 text-[#324299]">
-                    Check out the latest articles...
+            Check out the latest articles...
           </h1>
         </div>
 

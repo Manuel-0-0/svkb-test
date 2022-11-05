@@ -24,7 +24,6 @@ const Articles = () => {
     setSearch(e.target.value);
     if (e.target.value) {
       const response = await searchForPublishedArticle({ search: e.target.value });
-      console.log(response.data)
       setFilteredArticles(response.data);
     } else {
       setFilteredArticles(articles);
