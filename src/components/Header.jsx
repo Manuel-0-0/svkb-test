@@ -32,12 +32,12 @@ const Header = () => {
       href: "/categories",
       current: location.pathname.startsWith("/categories") ? true : false,
     },
-    {
-      name: user ? <UserCircleIcon className="w-10 h-10" /> : "Login",
-      href: user ? "/admin/home" : "/login",
-      current: location.pathname === "/login" ? true : false,
-      noOutline : true
-    },
+    // {
+    //   name: user ? <UserCircleIcon className="w-10 h-10" /> : "Login",
+    //   href: user ? "/admin/home" : "/login",
+    //   current: location.pathname === "/login" ? true : false,
+    //   noOutline : true
+    // },
   ];
 
   return (

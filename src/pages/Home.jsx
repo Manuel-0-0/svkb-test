@@ -33,9 +33,9 @@ const Home = () => {
   return (
     <DefaultLayout>
       <div className="h-full flex mt-10 md:mt-10 flex-col items-center">
-        <div className="flex justify-center items-center px-4 md:px-16 mb-10 w-full">
-          <h1 className="text-4xl md:text-5xl font-bold leading-tight text-center mb-4 md:mb-8 text-[#324299]">
-            Popular Articles
+        <div className="grid justify-items-center px-4 md:px-16 mb-10 w-full">
+          <h1 className="text-2xl md:text-2xl font-bold leading-tight text-left mb-2 md:mb-8 text-[#324299]">
+                    Check out the latest articles...
           </h1>
         </div>
 
