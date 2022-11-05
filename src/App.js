@@ -1,5 +1,5 @@
 import React, { Suspense } from "react";
-import { NotFound, Home, Login, Articles, Article } from "./routes";
+import { NotFound, Home, Login, Articles, Article, Category } from "./routes";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AdminDashboardArticles from "./pages/AdminDashboardArticles";
 import AdminDashboardHome from "./pages/AdminDashboardHome";
@@ -12,6 +12,7 @@ import AdminDashboardCategory from "./pages/AdminDashboardCategory";
 import AdminDashboardCategories from "./pages/AdminDashboardCategories";
 import AdminDashboardAddUser from "./pages/AdminDashboardAddUser"
 import Loading from "./components/Loading";
+import Categories from "./pages/Categories";
 
 
 function App() {
@@ -21,8 +22,13 @@ function App() {
         <Routes>
           <Route path="/" exact={true} element={<Home />} />
           <Route path="/login" element={<Login />} />
+
+
           <Route path="/articles" exact={true} element={<Articles />} />
           <Route path="/articles/:articleId" element={<Article />} />
+
+          <Route path="/categories" exact={true} element={<Categories />} />
+          <Route path="/category/:categoryId" element={<Category />} />
 
 
           <Route path="/admin/home" element={<AdminDashboardHome />} />

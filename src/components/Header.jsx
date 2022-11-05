@@ -28,9 +28,15 @@ const Header = () => {
       current: location.pathname.startsWith("/articles") ? true : false,
     },
     {
+      name: "Categories",
+      href: "/categories",
+      current: location.pathname.startsWith("/categories") ? true : false,
+    },
+    {
       name: user ? <UserCircleIcon className="w-10 h-10" /> : "Login",
       href: user ? "/admin/home" : "/login",
       current: location.pathname === "/login" ? true : false,
+      noOutline : true
     },
   ];
 
@@ -71,7 +77,8 @@ const Header = () => {
                             className={classNames(
                               item.current &&
                                 "bg-white text-[#324299] hover:text-[#324299]",
-                              "px-3 py-2 rounded-md text-sm text-white font-medium outline outline-0 hover:outline-1 hover:text-white"
+                              "px-3 py-2 rounded-md text-sm text-white font-medium outline outline-0 hover:outline-1 hover:text-white",
+                              item?.noOutline && "hover:outline-0"
                             )}
                             aria-current={item.current ? "page" : undefined}
                           >
@@ -79,15 +86,6 @@ const Header = () => {
                           </Link>
                         </div>
                       ))}
-                      {/* 
-                      {user && (
-                        <button
-                          onClick={() => logout()}
-                          className="bg-red-600 text-white px-3 py-2 hover:bg-red-500"
-                        >
-                          Logout
-                        </button>
-                      )} */}
                     </div>
                   </div>
                 </div>

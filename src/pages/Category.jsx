@@ -1,58 +1,55 @@
-import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
-import { useLocation, useParams } from "react-router-dom";
-import { selectAllCategories } from "../redux/category/categoryApiSlice";
-import DefaultLayout from "../layouts/DefaultLayout";
+import React, { useState, useEffect, useContext } from "react";
+import { useParams } from "react-router-dom";
+import { getArticleInCategory } from "../api/articleApis";
+import { getCategory } from "../api/categoryApis";
+import DefaultLayout from "../layout/DefaultLayout";
 import CategoryArticles from "../components/CategoryArticles";
+import { GlobalContext, showToast } from "../globalContext";
+import { getErrorMessage } from "../utilities/functions";
 
 const Category = () => {
-  const [category, setCategory] = useState();
-  const [active, setActive] = useState();
-  const location = useLocation();
   const { categoryId } = useParams();
-  const categories = useSelector(selectAllCategories);
+  const [category, setCategory] = useState();
+  const { dispatch: globalDispatch } = useContext(GlobalContext);
+  const [categoryArticles, setCategoryArticles] = useState([]);
+
+  const getSingleCategory = async () => {
+    try {
+      const response = await getCategory({ id: categoryId });
+      setCategory(response.data);
+    } catch (err) {
+      const error = getErrorMessage(err);
+      showToast(globalDispatch, {
+        message: error,
+        type: "error",
+      });
+    }
+  };
+
+  const getCategoryArticles = async () => {
+    try {
+      const response = await getArticleInCategory({ id: categoryId });
+      setCategoryArticles(response.data);
+    } catch (err) {
+      const error = getErrorMessage(err);
+      showToast(globalDispatch, {
+        message: error,
+        type: "error",
+      });
+    }
+  };
 
   useEffect(() => {
-    let id = location?.state?.categoryId || categoryId;
-    if (id) {
-      setCategory(categories.find((category) => category.id === Number(id)));
-      setActive(categories.find((category) => category.id === Number(id)).id);
-    } else {
-      setCategory(categories[0]);
-      setActive(categories[0].id);
-    }
-  }, [categories, location?.state?.categoryId, categoryId]);
+    Promise.all([getSingleCategory(), getCategoryArticles()]);
+  }, []);
 
   return (
     <DefaultLayout>
-      <div className="text-sm px-4 md:px-16 font-medium text-center text-gray-600 border-b border-gray-600 mb-4">
-        <ul className="flex flex-wrap -mb-px overflow-x-auto">
-          {categories.length > 0 && category ? (
-            categories
-              .sort((a, b) => {
-                if (a.id === active) return -1;
-                else return 1;
-              })
-              .map((cat) => (
-                <li key={cat.id} className="mr-2">
-                  <button
-                    onClick={() => setCategory(cat)}
-                    className={`inline-block p-4 rounded-t-lg border-b-2 border-transparent ${
-                      cat.id === category.id && "text-blue-500 border-blue-500"
-                    } hover:text-blue-400 hover:border-blue-400`}
-                  >
-                    {cat.categoryName}
-                  </button>
-                </li>
-              ))
-          ) : (
-            <p className="text-xl text-gray-600 mb-2">
-              Sorry no Categories to show{" "}
-            </p>
-          )}
-        </ul>
+      <div className="text-sm px-4 md:px-16 font-medium text-center text-gray-600 mb-4">
+        <h1 className="text-3xl my-6">{category?.categoryName}</h1>
+        <CategoryArticles articles={categoryArticles} />
       </div>
-      {category && <CategoryArticles articles={category.articles} />}
+      
     </DefaultLayout>
   );
 };

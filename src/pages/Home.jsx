@@ -68,8 +68,7 @@ const Home = () => {
               categories.slice(0, 9).map((category) => (
                 <Link
                   key={category.id}
-                  to="/category"
-                  state={{ categoryId: category.id }}
+                  to={`/category/${category.id}`}
                   className="hover:underline"
                 >
                   {category.categoryName}
