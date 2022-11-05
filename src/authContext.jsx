@@ -4,7 +4,6 @@ import Cookies from "js-cookie";
 export const AuthContext = React.createContext();
 
 const initialState = {
-  isAuthenticated: false,
   user: null,
   userId: null,
   token: null,
@@ -18,7 +17,6 @@ const reducer = (state, action) => {
       Cookies.set("sv_user_id", action.payload.userId)
       return {
         ...state,
-        isAuthenticated: true,
         user: action.payload.user,
         token: action.payload.token,
         userId: action.payload.userId
@@ -29,7 +27,6 @@ const reducer = (state, action) => {
       Cookies.remove("sv_user_id");
       return {
         ...state,
-        isAuthenticated: false,
         user: null,
         token: null,
         userId: null

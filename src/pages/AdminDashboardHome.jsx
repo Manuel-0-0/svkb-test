@@ -1,17 +1,25 @@
 import React, { useEffect, useState, useContext } from "react";
 import { Link } from "react-router-dom";
-import { NewspaperIcon, TrashIcon } from "@heroicons/react/20/solid";
+import { NewspaperIcon, TrashIcon, PencilIcon } from "@heroicons/react/20/solid";
 import { AuthContext } from "../authContext";
 import { getCategories } from "../api/categoryApis";
-import { getUserArticles, deleteArticle } from "../api/articleApis";
+import {
+  getUserArticles,
+  deleteArticle,
+  updateArticle,
+} from "../api/articleApis";
 import moment from "moment";
 import Cookies from "js-cookie";
 import DeleteModal from "../components/DeleteModal";
+import { Helmet } from "react-helmet";
+import { GlobalContext, showToast } from "../globalContext";
+import { getErrorMessage } from "../utilities/functions";
 
 import AuthenticatedLayout from "../layout/AuthenticatedLayout";
 
 const AdminDashboardHome = () => {
   const { state } = useContext(AuthContext);
+  const { dispatch: globalDispatch } = useContext(GlobalContext);
   const [articles, setArticles] = useState();
   const [categories, setCategories] = useState();
   const [deleteOpen, setDeleteOpen] = useState(false);
@@ -22,7 +30,13 @@ const AdminDashboardHome = () => {
     try {
       const response = await getCategories();
       setCategories(response.data);
-    } catch (err) {}
+    } catch (err) {
+      const error = getErrorMessage(err);
+      showToast(globalDispatch, {
+        message: error,
+        type: "error",
+      });
+    }
   };
 
   const getAllArticles = async () => {
@@ -36,31 +50,75 @@ const AdminDashboardHome = () => {
       if (published > 0 && total > 0) {
         setProgress((published / total) * 100);
       }
-    } catch (err) {}
+    } catch (err) {
+      const error = getErrorMessage(err);
+      showToast(globalDispatch, {
+        message: error,
+        type: "error",
+      });
+    }
+  };
+
+  const publishArticle = async (id, article) => {
+    try {
+      await updateArticle({
+        id: id,
+        body: {
+          title: article.title,
+          content: article.content,
+          draftStatus: article.draftStatus ? "False" : "True",
+        },
+      });
+      
+      showToast(globalDispatch, {
+        message: "Article Status Updated Successfully",
+        type: "success",
+      });
+      getAllArticles()
+    } catch (err) {
+      const error = getErrorMessage(err);
+      showToast(globalDispatch, {
+        message: error,
+        type: "error",
+      });
+    }
   };
 
   const handleDeleteArticle = async () => {
     try {
       await deleteArticle({ id: deleteId });
       getAllArticles();
-      setDeleteOpen(false)
-      setDeleteId(null)
-    } catch (err) {}
+      setDeleteOpen(false);
+      setDeleteId(null);
+    } catch (err) {
+      const error = getErrorMessage(err);
+      showToast(globalDispatch, {
+        message: error,
+        type: "error",
+      });
+    }
   };
 
   useEffect(() => {
     getAllCategories();
     getAllArticles();
   }, []);
+
+  const myStyle = {
+    width: `${progress}%`,
+  };
   return (
     <AuthenticatedLayout>
       <>
+        <Helmet>
+          <title>Admin Home | SunValley</title>
+        </Helmet>
         {articles && categories ? (
           <div className="overflow-auto h-screen pb-24 px-4 md:px-6">
-            <h1 className="text-4xl font-semibold text-gray-800">
+            <h1 className="text-4xl font-semibold mt-10 text-gray-800">
               Good afternoon, {state.user}
             </h1>
-            <h2 className="text-md text-gray-400">
+            <h2 className="text-md mt-4 text-gray-400">
               Here&#x27;s what&#x27;s happening with your sunvalley account.
             </h2>
             <div className="flex my-6 items-center w-full space-y-4 md:space-x-4 md:space-y-0 flex-col md:flex-row">
@@ -88,11 +146,10 @@ const AdminDashboardHome = () => {
                       </div>
                     </div>
                     <div className="w-full h-3 bg-gray-100">
-                      {progress > 0 && (
-                        <div
-                          className={`w-[${progress}%] h-full text-center text-xs text-white bg-green-400`}
-                        ></div>
-                      )}
+                      <div
+                        className="w-full h-full text-center text-xs text-white bg-green-400"
+                        style={myStyle}
+                      ></div>
                     </div>
                   </div>
                 </div>
@@ -185,7 +242,7 @@ const AdminDashboardHome = () => {
                           to={`/admin/article/edit/${article.Article.id}`}
                           className="font-medium text-blue-600 hover:underline mr-4 "
                         >
-                          Edit
+                          <PencilIcon className="w-5 h-5" />
                         </Link>
 
                         <button
@@ -196,6 +253,20 @@ const AdminDashboardHome = () => {
                           }}
                         >
                           <TrashIcon className="w-5 h-5" />
+                        </button>
+
+                        <button
+                          onClick={() =>
+                            publishArticle(
+                              article.Article.id,
+                              article.Article
+                            )
+                          }
+                          className="font-medium text-blue-600  ml-4 "
+                        >
+                          {article.Article.draftStatus
+                            ? "Draft Article"
+                            : "Publish Now"}
                         </button>
                       </td>
                     </tr>

@@ -49,7 +49,7 @@ const AuthenticatedLayout = ({ children }) => {
     {
       name: "Category",
       icon: <Square3Stack3DIcon className="h-5 w-5" />,
-      path: "/admin/category/create",
+      path: "/admin/category",
       active: location.pathname.startsWith("/admin/category"),
     },
     {

@@ -47,7 +47,7 @@ const Login = () => {
     }
   };
 
-  if (state.token && state.isAuthenticated) {
+  if (state.token && state.user) {
     navigate("/admin/home");
   }
   return (

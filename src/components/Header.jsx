@@ -1,8 +1,13 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Disclosure, Transition } from "@headlessui/react";
-import { Bars4Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import {
+  Bars4Icon,
+  XMarkIcon,
+  UserCircleIcon,
+} from "@heroicons/react/24/outline";
 import { useLocation, Link } from "react-router-dom";
 import Icon from "../utilities/icons/SunValley";
+import Cookies from "js-cookie";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -10,6 +15,7 @@ function classNames(...classes) {
 
 const Header = () => {
   const location = useLocation();
+  const user = Cookies.get("sv_user");
   let navigation = [
     {
       name: "Home",
@@ -22,8 +28,8 @@ const Header = () => {
       current: location.pathname.startsWith("/articles") ? true : false,
     },
     {
-      name: "Login",
-      href: "/login",
+      name: user ? <UserCircleIcon className="w-10 h-10" /> : "Login",
+      href: user ? "/admin/home" : "/login",
       current: location.pathname === "/login" ? true : false,
     },
   ];
@@ -63,7 +69,8 @@ const Header = () => {
                             to={item.href}
                             key={item.name}
                             className={classNames(
-                              item.current && "bg-white text-[#324299] hover:text-[#324299]",
+                              item.current &&
+                                "bg-white text-[#324299] hover:text-[#324299]",
                               "px-3 py-2 rounded-md text-sm text-white font-medium outline outline-0 hover:outline-1 hover:text-white"
                             )}
                             aria-current={item.current ? "page" : undefined}
@@ -106,7 +113,7 @@ const Header = () => {
                     <div key={idx}>
                       <Link
                         to={item.href}
-                        key={item.name}
+                        key={idx}
                         className={classNames(
                           item.current && "underline",
                           " px-3 mx-auto self-start py-2 rounded-md text-base font-medium"
@@ -121,14 +128,6 @@ const Header = () => {
                       </Link>
                     </div>
                   ))}
-                  {/* {user && (
-                    <button
-                      onClick={() => logout()}
-                      className="bg-red-600 text-white px-3 py-2 hover:bg-red-500"
-                    >
-                      Logout
-                    </button>
-                  )} */}
                 </div>
               </Disclosure.Panel>
             </Transition>

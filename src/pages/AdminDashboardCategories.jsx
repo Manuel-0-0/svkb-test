@@ -1,24 +1,26 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { getArticles, searchForArticle } from "../api/articleApis";
+import { getCategories, searchForCategory } from "../api/categoryApis";
 import Table from "../components/Table";
 import AuthenticatedLayout from "../layout/AuthenticatedLayout";
 import { Helmet } from "react-helmet";
-import { GlobalContext, showToast } from  "../globalContext"
 import { getErrorMessage } from "../utilities/functions";
+import { GlobalContext, showToast } from "../globalContext";
 
-const AdminDashboardArticle = () => {
+const AdminDashboardCategories = () => {
+    
   const navigate = useNavigate();
-  const {dispatch: globalDispatch} = useContext(GlobalContext)
-  const [articles, setArticles] = useState();
+  const [categories, setCategories] = useState();
   const [search, setSearch] = useState();
-  const [filteredArticles, setFilteredArticles] = useState();
+  const [filteredCategories, setFilteredCategories] = useState();
+  const { dispatch: globalDispatch } = useContext(GlobalContext);
 
-  const getAllArticles = async () => {
+  const getAllCategories = async () => {
     try {
-      const response = await getArticles();
-      setArticles(response.data);
-      setFilteredArticles(response.data);
+      const response = await getCategories();
+      console.log(response.data);
+      setCategories(response.data);
+      setFilteredCategories(response.data);
     } catch (err) {
       const error = getErrorMessage(err);
       showToast(globalDispatch, {
@@ -29,23 +31,23 @@ const AdminDashboardArticle = () => {
   };
 
   useEffect(() => {
-    getAllArticles();
+    getAllCategories();
   }, []);
 
   const handleChange = async (e) => {
     setSearch(e.target.value);
     if (e.target.value) {
-      const response = await searchForArticle({ search: e.target.value });
-      setFilteredArticles(response.data);
+      const response = await searchForCategory({ search: e.target.value });
+      setFilteredCategories(response.data);
     } else {
-      setFilteredArticles(articles);
+      setFilteredCategories(categories);
     }
   };
 
   return (
     <AuthenticatedLayout>
       <Helmet>
-        <title>Admin - Articles | SunValley</title>
+        <title>Admin - Categories | SunValley</title>
       </Helmet>
       <div className="w-11/12 mx-auto p-6 rounded bg-white border">
         <button
@@ -53,7 +55,7 @@ const AdminDashboardArticle = () => {
           type="button"
           className="text-white mr-4 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center my-4"
         >
-          Create Article
+          Create Category
         </button>
         <div className="w-full mx-auto px-2 py-6">
           <label
@@ -86,22 +88,21 @@ const AdminDashboardArticle = () => {
               value={search}
               onChange={(e) => handleChange(e)}
               className="block p-4 pl-10 w-full text-sm text-gray-900 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Search Articles..."
+              placeholder="Search Categories..."
               required
             />
           </div>
           <div className="mt-4">
             <Table
               headers={[
-                { name: "Article Name", id: "title", link: "admin/article" },
-                { name: "Date Created", id: "dateCreated" },
                 {
-                  name: "Category",
-                  id: "category_name",
+                  name: "Category Name",
+                  id: "categoryName",
                   link: "admin/category",
                 },
+                { name: "Articles In Category", id: "articleNum" },
               ]}
-              articles={filteredArticles}
+              articles={filteredCategories}
             />
           </div>
         </div>
@@ -110,4 +111,4 @@ const AdminDashboardArticle = () => {
   );
 };
 
-export default AdminDashboardArticle;
+export default AdminDashboardCategories;

@@ -24,7 +24,7 @@ const CreatePageLayout = ({ title, backTo, children, setDeleteOpen }) => {
             onClick={() => setDeleteOpen(true)}
           >
             <TrashIcon className="text-red-500 w-5 h-5  mr-2" />
-            <span>Delete Article</span>
+            <span className="capitalize">Delete {title}</span>
           </span>
         </div>
       </div>

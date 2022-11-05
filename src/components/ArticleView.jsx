@@ -17,13 +17,13 @@ const ArticleView = ({ article }) => {
   };
 
   return (
-    <>
+    <div className="lg:w-1/2 mx-auto mt-10">
       <div className="flex items-center">
-        <h2 className="mt-4 uppercase tracking-widest text-xs text-gray-600">
+        <h2 className="mt-4 uppercase tracking-widest text-xs text-gray-600 mr-4">
           {moment(article?.dateCreated).format("Do MMM, YYYY")}
         </h2>
         <CopyToClipboard text={copiedText} onCopy={() => handleShowToast()}>
-          <ClipboardDocumentCheckIcon className="h-6 my-auto w-6 text-gray-500 cursor" />
+          <ClipboardDocumentCheckIcon className="h-6 w-6 text-gray-500 cursor" />
         </CopyToClipboard>
       </div>
 
@@ -33,21 +33,7 @@ const ArticleView = ({ article }) => {
       <div className="prose prose-base sm:prose-lg lg:prose-xl mt-6 w-full">
         <p data-color-mode="light"> {parse(`${article?.content}`)}</p>
       </div>
-
-      <div className="text-lg mt-10 font-bold">
-        {/* <p className="text-gray-900 leading-none">
-            Created By :
-            {user && user._id === carPost.createdBy._id
-              ? " You"
-              : carPost.createdBy.firstName +
-                " " +
-                carPost.createdBy.lastName}
-          </p>
-          <p className="text-gray-900 leading-none mt-4">
-            Contact : {carPost.createdBy.email}
-          </p> */}
-      </div>
-    </>
+    </div>
   );
 };
 

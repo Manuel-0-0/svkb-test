@@ -9,6 +9,7 @@ import DropDown from "./DropDown";
 import { GlobalContext, showToast } from "../globalContext";
 import { formats, modules } from "../utilities/Editor";
 import CreateLayout from "../layout/CreateLayout";
+import { getErrorMessage } from "../utilities/functions";
 
 const CreateArticle = () => {
   const { dispatch: globalDispatch } = useContext(GlobalContext);
@@ -72,7 +73,7 @@ const CreateArticle = () => {
         });
         navigate("/admin/home");
       } catch (err) {
-        const error = err.data?.error || err.data;
+        const error = getErrorMessage(err)
         showToast(globalDispatch, {
           message: error,
           type: "error",

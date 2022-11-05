@@ -16,4 +16,19 @@ axiosInstance.interceptors.request.use((config) => {
     return config
 })
 
+axiosInstance.interceptors.response.use((response) => response,
+    (error) => {
+        if (error.response.status === 403) {
+            if (!window.location.pathname.includes('login')) {
+                Cookies.remove('sv_token')
+                Cookies.remove("sv_user");
+                Cookies.remove("sv_user_id")
+                Promise.reject({ error: 'Session Expired, please Login again to continue' });
+                setTimeout(() => window.location.href = `${window.location.origin}/login`, 3000)
+            }
+
+        }
+        return Promise.reject(error);
+    })
+
 export default axiosInstance

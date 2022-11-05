@@ -5,6 +5,7 @@ import { GlobalContext, showToast } from "../globalContext";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { RegisterSchema } from "../utilities/schemas";
 import { createUser } from "../api/authApi";
+import { Helmet } from "react-helmet";
 
 const AdminDashboardAddUser = () => {
   const { dispatch: globalDispatch } = useContext(GlobalContext);
@@ -40,6 +41,9 @@ const AdminDashboardAddUser = () => {
 
   return (
     <AuthenticatedLayout>
+      <Helmet>
+        <title>Create User | SunValley</title>
+      </Helmet>
       <div className="w-11/12 px-6 py-8 rounded h-full flex flex-col items-center justify-center  mx-auto md:h-screen lg:py-0 ">
         <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">

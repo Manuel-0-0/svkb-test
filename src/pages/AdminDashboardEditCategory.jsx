@@ -1,19 +1,19 @@
 import React from "react";
-import CreateArticle from "../components/CreateArticle";
+import EditCategory from "../components/EditCategory";
 import AuthenticatedLayout from "../layout/AuthenticatedLayout";
 import { Helmet } from "react-helmet";
 
-const AdminDashboardArticle = () => {
+const AdminDashboardEditCategory = () => {
   return (
     <AuthenticatedLayout>
       <Helmet>
-        <title>Create Article | SunValley</title>
+        <title>Edit Category| SunValley</title>
       </Helmet>
       <div className="w-11/12 mx-auto p-6 rounded bg-white border">
-        <CreateArticle />
+        <EditCategory />
       </div>
     </AuthenticatedLayout>
   );
 };
 
-export default AdminDashboardArticle;
+export default AdminDashboardEditCategory;

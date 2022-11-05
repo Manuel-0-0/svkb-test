@@ -1,11 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import ReactQuill from "react-quill";
-import { getCategories } from "../api/categoryApis";
 import { updateArticle, getArticle, deleteArticle } from "../api/articleApis";
 import { convertToHtml } from "mammoth/mammoth.browser";
 import "react-quill/dist/quill.snow.css";
-import DropDown from "./DropDown";
 import { GlobalContext, showToast } from "../globalContext";
 import { formats, modules } from "../utilities/Editor";
 import EditLayout from "../layout/EditLayout";
@@ -19,8 +17,6 @@ const EditArticle = () => {
   const navigate = useNavigate();
   const { articleId } = useParams();
   const [article, setArticle] = useState();
-  const [category, setCategory] = useState();
-  const [categories, setCategories] = useState();
   const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -45,21 +41,6 @@ const EditArticle = () => {
       if (err.response.status === 404) {
         navigate("/notfound");
       }
-    }
-  };
-
-  const getAllCategories = async () => {
-    try {
-      setLoading(true);
-      const response = await getCategories();
-      setCategories(response.data);
-      setLoading(false);
-    } catch (err) {
-      const error = getErrorMessage(err);
-      showToast(globalDispatch, {
-        message: error,
-        type: "error",
-      });
     }
   };
 
@@ -105,7 +86,6 @@ const EditArticle = () => {
           body: {
             title: title,
             content: content,
-            CategoryId: category.id,
             draftStatus: "False",
           },
         });
@@ -124,29 +104,14 @@ const EditArticle = () => {
           type: "error",
         });
       }
-    } else {
-      setEditOpen(false);
-      if (!category?.id) {
-        showToast(globalDispatch, {
-          message: "Please select a category",
-          type: "error",
-        });
-      }
     }
   };
 
   useEffect(() => {
-    Promise.all([getAllCategories(), getSingleArticle()]);
+    getSingleArticle();
   }, []);
 
-  useEffect(() => {
-    if (categories && article) {
-      setCategory(
-        categories.find((category) => category.id === article.category_id)
-      );
-    }
-  }, [categories, article]);
-  const canSave = [title, content, category?.id].every(Boolean) && !loading;
+  const canSave = [title, content].every(Boolean) && !loading;
 
   return (
     <EditLayout
@@ -154,7 +119,7 @@ const EditArticle = () => {
       backTo={`/admin/article/${articleId}`}
       setDeleteOpen={setDeleteOpen}
     >
-      {categories && !loading ? (
+      {!loading ? (
         <>
           <div className="relative z-0 mb-6 w-full group">
             <input
@@ -173,18 +138,6 @@ const EditArticle = () => {
             >
               Article Title
             </label>
-          </div>
-          <div className="relative z-10 mb-6 w-full group mt-4">
-            {category && (
-              <DropDown
-                data={categories}
-                identifier={"id"}
-                name={"categoryName"}
-                selected={category}
-                setSelected={setCategory}
-                defaultName={"Categories"}
-              />
-            )}
           </div>
           <div className="relative flex flex-1 flex-col z-0 mb-6 w-full h-full ">
             <label

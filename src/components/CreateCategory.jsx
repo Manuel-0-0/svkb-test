@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { createCategory } from "../api/categoryApis";
 import { GlobalContext, showToast } from "../globalContext";
 import CreateLayout from "../layout/CreateLayout";
+import { getErrorMessage } from "../utilities/functions";
 
 const CreateCategory = () => {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ const CreateCategory = () => {
     
       navigate("/admin/home");
     } catch (err) {
-      const error = err.data?.error || err.data;
+      const error = getErrorMessage(err);
       showToast(globalDispatch, {
         message: error,
         type: "error",

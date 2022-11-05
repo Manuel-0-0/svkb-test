@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import Loading from "../components/Loading";
 import { getArticle, deleteArticle } from "../api/articleApis";
@@ -7,8 +7,12 @@ import AuthenticatedLayout from "../layout/AuthenticatedLayout";
 import DeleteModal from "../components/DeleteModal";
 import { useNavigate } from "react-router-dom";
 import { TrashIcon, PencilSquareIcon } from "@heroicons/react/20/solid";
+import { Helmet } from "react-helmet";
+import { GlobalContext, showToast } from "../globalContext";
+import { getErrorMessage } from "../utilities/functions";
 
 const AdminDashboardArticle = () => {
+  const { dispatch: globalDispatch } = useContext(GlobalContext);
   const { articleId } = useParams();
   const [loading, setLoading] = useState(false);
   const [article, setArticle] = useState();
@@ -29,7 +33,13 @@ const AdminDashboardArticle = () => {
       await deleteArticle({ id: articleId });
       setDeleteOpen(false);
       navigate("/admin/articles");
-    } catch (err) {}
+    } catch (err) {
+      const error = getErrorMessage(err);
+      showToast(globalDispatch, {
+        message: error,
+        type: "error",
+      });
+    }
   };
 
   useEffect(() => {
@@ -40,7 +50,10 @@ const AdminDashboardArticle = () => {
   else if (!loading && article)
     return (
       <AuthenticatedLayout>
-        <div className="max-w-6xl mx-auto">
+        <Helmet>
+          <title>{article.title} | SunValley</title>
+        </Helmet>
+        <div className="w-1/2 mx-auto">
           <div className="flex justify-between w-full max-w-sm mb-4">
             <span
               className="flex cursor-pointer"
@@ -57,8 +70,8 @@ const AdminDashboardArticle = () => {
               Delete Article
             </span>
           </div>
-          <ArticleView article={article} />
         </div>
+        <ArticleView article={article} />
         <DeleteModal
           open={deleteOpen}
           setOpen={setDeleteOpen}
