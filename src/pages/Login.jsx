@@ -38,9 +38,8 @@ const Login = () => {
       });
       navigate("/admin/home");
     } catch (err) {
-      const error = err.data?.error || err.data;
       showToast(globalDispatch, {
-        message: error,
+        message: "Incorrect username or password",
         type: "error",
       });
       setSubmitting(false);

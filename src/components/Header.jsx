@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Disclosure, Transition } from "@headlessui/react";
 import {
   Bars4Icon,
@@ -8,6 +8,9 @@ import { useLocation, Link } from "react-router-dom";
 import Icon from "../utilities/icons/SunValley";
 import Cookies from "js-cookie";
 import ContactModal from "./ContactModal";
+import { AuthContext } from "../authContext";
+import { GlobalContext, showToast } from "../globalContext";
+import { useNavigate } from "react-router-dom"
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -15,11 +18,23 @@ function classNames(...classes) {
 
 const Header = () => {
   const location = useLocation();
+  const navigate = useNavigate()
   const [modalOpen, setModalOpen] = useState(false)
+  const { dispatch } = useContext(AuthContext);
+  const { dispatch: globalContext } = useContext(GlobalContext);
 
   const onModalClose = () =>{
     setModalOpen(false)
   }
+
+  const handleLogout = () => {
+    dispatch({ type: "LOGOUT" });
+    showToast(globalContext, {
+      message: "Logout Successful!",
+      type: "success",
+    });
+    navigate("/");
+  };
   const user = Cookies.get("sv_user");
   let navigation = [
     {
@@ -68,9 +83,9 @@ const Header = () => {
                 </div>
                 <div className="flex-1 flex items-stretch justify-start px-2">
                   <div className="flex-shrink-0 flex items-center">
-                    <Link to="/">
+                    <button onClick={() => handleLogout()}>
                       <Icon />
-                    </Link>
+                    </button>
                   </div>
                   <div className="hidden sm:block my-auto ml-auto lg:mr-12 lg:items-center lg:w-auto lg:space-x-12">
                     <div className="flex items-center space-x-4">

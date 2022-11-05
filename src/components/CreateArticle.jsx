@@ -26,7 +26,13 @@ const CreateArticle = () => {
       const response = await getCategories();
       setCategories(response.data);
       setLoading(false);
-    } catch (err) {}
+    } catch (err) {
+      const error = getErrorMessage(err)
+        showToast(globalDispatch, {
+          message: error,
+          type: "error",
+        });
+    }
   };
 
   const handleChange = (event) => {
@@ -80,7 +86,7 @@ const CreateArticle = () => {
         });
       }
     } else {
-      if (!category.id) {
+      if (!category?.id) {
         showToast(globalDispatch, {
           message: "Please select a category",
           type: "error",
