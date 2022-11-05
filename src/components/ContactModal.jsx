@@ -47,29 +47,31 @@ const ContactModal = ({ modal, onModalClose }) => {
             leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
             <div className="inline-block align-center bg-white rounded-lg py-20 overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full">
-              <div className=" flex flex-wrap py-6 w-1/2 mx-auto justify-between">
+              <div className=" flex flex-wrap py-6 w-1/2 mx-auto justify-between ">
                 <div className="">
-                  <img
+                <a href="mailto:it@sunvalley.com" className="hover:brightness-75" >
+                <img
                     src="https://res.cloudinary.com/dz0oop5kb/image/upload/v1664340164/svco/Gmail_icon__2020_1_owruyd.png"
                     alt=""
                   />
+                  </a>{" "}
+                  
                 </div>
 
                 <div className="border"></div>
 
                 <div className="">
-                  <img
+                  
+                   <a href="https://sinclairoil.atlassian.net/servicedesk/customer/user/login?destination=portals" className="hover:brightness-75"><img
                     src="https://res.cloudinary.com/dz0oop5kb/image/upload/v1664340164/svco/jira_png_1_pz5szx.png"
                     alt=""
-                  />
+                  /></a>
                 </div>
               </div>
               <div className="text-lg font-semibold mb-3">
-                <a href="mailto:it@sunvalley.com">Send us an Email</a>{" "}
-                <span className="text-sm font-normal">or</span>{" "}
-                <a href="https://sinclairoil.atlassian.net/servicedesk/customer/user/login?destination=portals">
+                Send us an Email
+                <span className="text-sm font-normal">  or  </span>{" "}
                   Put in a Service
-                </a>
               </div>
               <hr className="w-1/2 mx-auto" />
               <div className="w-full flex justify-center mt-3 items-center flex-col">
