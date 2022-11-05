@@ -212,7 +212,7 @@ const EditArticle = () => {
         open={editOpen}
         setOpen={setEditOpen}
         handleConfirm={publishArticle}
-        secondButton="Draft Article"
+        secondButton="Save As Draft"
         secondButtonConfirm={draftArticle}
         message="Are you sure you want to edit this article?"
         messageTitle="Confirm Edit"
