@@ -34,7 +34,8 @@ const Articles = () => {
   return (
     <DefaultLayout>
       {articles && articles.length > 0 ? (
-        <div className="w-9/12 mx-auto p-4">
+        <div className="w-11/12 mx-auto my-6 p-6 rounded bg-white">
+        <div className="w-full mx-auto px-2 py-6">
           <label
             htmlFor="default-search"
             className="mb-2 text-sm font-medium text-gray-900 sr-only"
@@ -73,12 +74,13 @@ const Articles = () => {
             <Table
               headers={[
                 { name: "Article Name", id: "title", link: "articles" },
-                { name: "Date Created", id: "dateCreated" },
                 { name: "Category", id: "category_name", link: "category" },
+                { name: "Date Created", id: "dateCreated" },
               ]}
               articles={filteredArticles}
             />
           </div>
+        </div>
         </div>
       ) : (
         <div className="h-[80vh] w-full flex justify-center items-center">
