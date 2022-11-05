@@ -11,7 +11,7 @@ const Home = () => {
 
   const getAllCategories = async () => {
     try {
-      const response = await getCategories();
+      const response = await getCategories({page: 0, limit: 6});
       setCategories(response.data);
       console.log(typeof response.data);
     } catch (err) {}
@@ -19,7 +19,7 @@ const Home = () => {
 
   const getAllArticles = async () => {
     try {
-      const response = await getPublishedArticles();
+      const response = await getPublishedArticles({page: 0, limit: 6});
       setArticles(response.data);
       console.log(typeof response.data);
     } catch (err) {}

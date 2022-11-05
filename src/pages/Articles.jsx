@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import DefaultLayout from "../layout/DefaultLayout";
-import { getPublishedArticles, searchForArticle } from "../api/articleApis";
+import { getPublishedArticles, searchForPublishedArticle } from "../api/articleApis";
 import Table from "../components/Table";
 
 const Articles = () => {
@@ -23,7 +23,7 @@ const Articles = () => {
   const handleChange = async (e) => {
     setSearch(e.target.value);
     if (e.target.value) {
-      const response = await searchForArticle({ search: e.target.value });
+      const response = await searchForPublishedArticle({ search: e.target.value });
       console.log(response.data)
       setFilteredArticles(response.data);
     } else {
