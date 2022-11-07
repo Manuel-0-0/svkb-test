@@ -38,16 +38,15 @@ const Login = () => {
       });
       navigate("/admin/home");
     } catch (err) {
-      const error = err.data?.error || err.data;
       showToast(globalDispatch, {
-        message: error,
+        message: "Incorrect username or password",
         type: "error",
       });
       setSubmitting(false);
     }
   };
 
-  if (state.token && state.isAuthenticated) {
+  if (state.token && state.user) {
     navigate("/admin/home");
   }
   return (
@@ -66,7 +65,7 @@ const Login = () => {
           <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0">
             <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
               <h1 className="text-xl font-bold leading-tight tracking-tight text-[#324299] md:text-2xl">
-                Sign in to your account
+                Sign in to your account <Link to="/" className="text-xs text-gray-400 ml-3">Go Back Home</Link>
               </h1>
               <Formik
                 initialValues={{

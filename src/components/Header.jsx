@@ -1,8 +1,16 @@
-import React from "react";
+import React, { useState, useContext } from "react";
 import { Disclosure, Transition } from "@headlessui/react";
-import { Bars4Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import {
+  Bars4Icon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
 import { useLocation, Link } from "react-router-dom";
 import Icon from "../utilities/icons/SunValley";
+import Cookies from "js-cookie";
+import ContactModal from "./ContactModal";
+import { AuthContext } from "../authContext";
+import { GlobalContext, showToast } from "../globalContext";
+import { useNavigate } from "react-router-dom"
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -10,6 +18,24 @@ function classNames(...classes) {
 
 const Header = () => {
   const location = useLocation();
+  const navigate = useNavigate()
+  const [modalOpen, setModalOpen] = useState(false)
+  const { dispatch } = useContext(AuthContext);
+  const { dispatch: globalContext } = useContext(GlobalContext);
+
+  const onModalClose = () =>{
+    setModalOpen(false)
+  }
+
+  const handleLogout = () => {
+    dispatch({ type: "LOGOUT" });
+    showToast(globalContext, {
+      message: "Logout Successful!",
+      type: "success",
+    });
+    navigate("/");
+  };
+  const user = Cookies.get("sv_user");
   let navigation = [
     {
       name: "Home",
@@ -22,10 +48,16 @@ const Header = () => {
       current: location.pathname.startsWith("/articles") ? true : false,
     },
     {
-      name: "Login",
-      href: "/login",
-      current: location.pathname === "/login" ? true : false,
+      name: "Categories",
+      href: "/categories",
+      current: location.pathname.startsWith("/categories") ? true : false,
     },
+    // {
+    //   name: user ? <UserCircleIcon className="w-10 h-10" /> : "Login",
+    //   href: user ? "/admin/home" : "/login",
+    //   current: location.pathname === "/login" ? true : false,
+    //   noOutline : true
+    // },
   ];
 
   return (
@@ -51,9 +83,9 @@ const Header = () => {
                 </div>
                 <div className="flex-1 flex items-stretch justify-start px-2">
                   <div className="flex-shrink-0 flex items-center">
-                    <Link to="/">
+                    <button onClick={() => handleLogout()}>
                       <Icon />
-                    </Link>
+                    </button>
                   </div>
                   <div className="hidden sm:block my-auto ml-auto lg:mr-12 lg:items-center lg:w-auto lg:space-x-12">
                     <div className="flex items-center space-x-4">
@@ -63,24 +95,19 @@ const Header = () => {
                             to={item.href}
                             key={item.name}
                             className={classNames(
-                              item.current && "bg-white text-[#324299] hover:text-[#324299]",
-                              "px-3 py-2 rounded-md text-sm text-white font-medium outline outline-0 hover:outline-1 hover:text-white"
+                              item.current &&
+                                "bg-white text-[#324299] hover:text-[#324299]",
+                              "px-3 py-2 rounded-md text-sm text-white font-medium outline outline-0 hover:outline-1 hover:text-white",
+                              item?.noOutline && "hover:outline-0"
                             )}
                             aria-current={item.current ? "page" : undefined}
                           >
                             {item.name}
                           </Link>
                         </div>
+                        
                       ))}
-                      {/* 
-                      {user && (
-                        <button
-                          onClick={() => logout()}
-                          className="bg-red-600 text-white px-3 py-2 hover:bg-red-500"
-                        >
-                          Logout
-                        </button>
-                      )} */}
+                      <button className="text-white bg-blue-500 py-2 px-4 rounded hover:bg-blue-400" onClick={()=> setModalOpen(true)}>Contact Us</button>
                     </div>
                   </div>
                 </div>
@@ -106,7 +133,7 @@ const Header = () => {
                     <div key={idx}>
                       <Link
                         to={item.href}
-                        key={item.name}
+                        key={idx}
                         className={classNames(
                           item.current && "underline",
                           " px-3 mx-auto self-start py-2 rounded-md text-base font-medium"
@@ -119,19 +146,13 @@ const Header = () => {
                           {item.name}
                         </Disclosure.Button>
                       </Link>
+                      <button onClick={()=> setModalOpen(true)}>Contact Us</button>
                     </div>
                   ))}
-                  {/* {user && (
-                    <button
-                      onClick={() => logout()}
-                      className="bg-red-600 text-white px-3 py-2 hover:bg-red-500"
-                    >
-                      Logout
-                    </button>
-                  )} */}
                 </div>
               </Disclosure.Panel>
             </Transition>
+            <ContactModal modal={modalOpen} onModalClose={onModalClose} />
           </>
         )}
       </Disclosure>

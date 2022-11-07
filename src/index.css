@@ -1,3 +1,14 @@
+#root{
+overflow-x: hidden;
+text-transform: capitalize
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.ql-editor{
+    min-height: 300px !important;
+    max-height: 500px !important;
+    overflow-y: auto
+  }

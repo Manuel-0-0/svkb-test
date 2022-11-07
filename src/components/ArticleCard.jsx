@@ -3,11 +3,7 @@ import { Link } from "react-router-dom";
 import parse from "html-react-parser";
 import Loading from "./Loading";
 
-const ArticleCard = ({ article }) => {
-  
-
-  
-  
+const ArticleCard = ({ article }) => {  
   return (
     <>
       {article ? (
