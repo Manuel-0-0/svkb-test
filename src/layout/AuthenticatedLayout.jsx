@@ -36,7 +36,7 @@ const AuthenticatedLayout = ({ children }) => {
       message: "Logout Successful!",
       type: "success",
     });
-    navigate("/login");
+    navigate("/");
   };
 
   const navBars = [
@@ -87,9 +87,9 @@ const AuthenticatedLayout = ({ children }) => {
         <div className="h-screen block shadow-lg lg:block relative w-80">
           <div className="bg-[#324299] h-full ">
             <div className="flex items-center justify-start pt-6 ml-8">
-              <Link to="/">
-                <Icon mobile={false} />
-              </Link>
+              <button onClick={() => (user ? handleLogout() : navigate("/"))}>
+                <Icon />
+              </button>
             </div>
             <nav className="mt-6">
               <div>

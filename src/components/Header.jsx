@@ -1,16 +1,13 @@
 import React, { useState, useContext } from "react";
 import { Disclosure, Transition } from "@headlessui/react";
-import {
-  Bars4Icon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline";
+import { Bars4Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useLocation, Link } from "react-router-dom";
 import Icon from "../utilities/icons/SunValley";
 import Cookies from "js-cookie";
 import ContactModal from "./ContactModal";
 import { AuthContext } from "../authContext";
 import { GlobalContext, showToast } from "../globalContext";
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -18,14 +15,14 @@ function classNames(...classes) {
 
 const Header = () => {
   const location = useLocation();
-  const navigate = useNavigate()
-  const [modalOpen, setModalOpen] = useState(false)
+  const navigate = useNavigate();
+  const [modalOpen, setModalOpen] = useState(false);
   const { dispatch } = useContext(AuthContext);
   const { dispatch: globalContext } = useContext(GlobalContext);
 
-  const onModalClose = () =>{
-    setModalOpen(false)
-  }
+  const onModalClose = () => {
+    setModalOpen(false);
+  };
 
   const handleLogout = () => {
     dispatch({ type: "LOGOUT" });
@@ -83,7 +80,9 @@ const Header = () => {
                 </div>
                 <div className="flex-1 flex items-stretch justify-start px-2">
                   <div className="flex-shrink-0 flex items-center">
-                    <button onClick={() => handleLogout()}>
+                    <button
+                      onClick={() => (user ? handleLogout() : navigate("/"))}
+                    >
                       <Icon />
                     </button>
                   </div>
@@ -105,9 +104,13 @@ const Header = () => {
                             {item.name}
                           </Link>
                         </div>
-                        
                       ))}
-                      <button className="text-white bg-blue-500 py-2 px-4 rounded hover:bg-blue-400" onClick={()=> setModalOpen(true)}>Contact Us</button>
+                      <button
+                        className="text-white bg-blue-500 py-2 px-4 rounded hover:bg-blue-400"
+                        onClick={() => setModalOpen(true)}
+                      >
+                        Contact Us
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -146,7 +149,9 @@ const Header = () => {
                           {item.name}
                         </Disclosure.Button>
                       </Link>
-                      <button onClick={()=> setModalOpen(true)}>Contact Us</button>
+                      <button onClick={() => setModalOpen(true)}>
+                        Contact Us
+                      </button>
                     </div>
                   ))}
                 </div>
