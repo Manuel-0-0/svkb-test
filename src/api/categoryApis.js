@@ -10,4 +10,4 @@ export const updateCategory = ({ id, body }) => axiosInstance.put(`/category/Upd
 
 export const deleteCategory = ({ id }) => axiosInstance.delete(`/category/Delete/${id}`)
 
-export const searchForCategory =({search}) => axiosInstance.get(`/category/Search?keyword=${search}`)
+export const searchForCategory =({search}) => axiosInstance.get(`/category/Search?keyword=${search?.toLowerCase()}`)

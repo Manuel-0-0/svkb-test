@@ -18,8 +18,8 @@ export const updateArticle = ({ id, body }) => axiosInstance.put(`/articles/Upda
 
 export const deleteArticle = ({ id }) => axiosInstance.delete(`/articles/Delete/${id}`)
 
-export const searchForPublishedArticle =({search}) => axiosInstance.get(`/articles/Search/?keyword=${search}`)
+export const searchForPublishedArticle =({search}) => axiosInstance.get(`/articles/Search/?keyword=${search?.toLowerCase()}`)
 
-export const searchForArticle =({search}) => axiosInstance.get(`/articles/Search/?keyword=${search}`)
+export const searchForArticle =({search}) => axiosInstance.get(`/articles/Search/?keyword=${search?.toLowerCase()}`)
 
 export const getUserArticles = ({id}) =>axiosInstance.get(`/articles/user/${id}`)
