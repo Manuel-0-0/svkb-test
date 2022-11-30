@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { getCategories, searchForCategory } from "../api/categoryApis";
 import Table from "../components/Table";
@@ -6,9 +6,10 @@ import AuthenticatedLayout from "../layout/AuthenticatedLayout";
 import { Helmet } from "react-helmet";
 import { getErrorMessage } from "../utilities/functions";
 import { GlobalContext, showToast } from "../globalContext";
+import debounce from "lodash.debounce"
 
 const AdminDashboardCategories = () => {
-    
+
   const navigate = useNavigate();
   const [categories, setCategories] = useState();
   const [search, setSearch] = useState();
@@ -42,6 +43,16 @@ const AdminDashboardCategories = () => {
       setFilteredCategories(categories);
     }
   };
+
+  const debouncedResults = useMemo(() => {
+    return debounce(handleChange, 500);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      debouncedResults.cancel();
+    };
+  });
 
   return (
     <AuthenticatedLayout>
@@ -84,8 +95,7 @@ const AdminDashboardCategories = () => {
             <input
               type="search"
               id="default-search"
-              value={search}
-              onChange={(e) => handleChange(e)}
+              onChange={debouncedResults}
               className="block p-4 pl-10 w-full text-sm text-gray-900 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
               placeholder="Search Categories..."
               required
@@ -100,7 +110,7 @@ const AdminDashboardCategories = () => {
                   link: "admin/category",
                 },
                 { name: "Articles In Category", id: "articleNum" },
-                {name: "Date Created", id:"dateCreated"}
+                { name: "Date Created", id: "dateCreated" }
               ]}
               articles={filteredCategories}
             />

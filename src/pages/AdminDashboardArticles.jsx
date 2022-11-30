@@ -1,15 +1,16 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { getArticles, searchForArticle } from "../api/articleApis";
 import Table from "../components/Table";
 import AuthenticatedLayout from "../layout/AuthenticatedLayout";
 import { Helmet } from "react-helmet";
-import { GlobalContext, showToast } from  "../globalContext"
+import { GlobalContext, showToast } from "../globalContext"
 import { getErrorMessage } from "../utilities/functions";
+import debounce from "lodash.debounce"
 
 const AdminDashboardArticle = () => {
   const navigate = useNavigate();
-  const {dispatch: globalDispatch} = useContext(GlobalContext)
+  const { dispatch: globalDispatch } = useContext(GlobalContext)
   const [articles, setArticles] = useState();
   const [search, setSearch] = useState();
   const [filteredArticles, setFilteredArticles] = useState();
@@ -35,12 +36,22 @@ const AdminDashboardArticle = () => {
   const handleChange = async (e) => {
     setSearch(e.target.value);
     if (e.target.value) {
-      const response = await searchForArticle({ search: e.target.value });
+      const response = await searchForArticle({ search: e.target.value })
       setFilteredArticles(response.data);
     } else {
       setFilteredArticles(articles);
     }
   };
+
+  const debouncedResults = useMemo(() => {
+    return debounce(handleChange, 500);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      debouncedResults.cancel();
+    };
+  });
 
   return (
     <AuthenticatedLayout>
@@ -83,8 +94,7 @@ const AdminDashboardArticle = () => {
             <input
               type="search"
               id="default-search"
-              value={search}
-              onChange={(e) => handleChange(e)}
+              onChange={debouncedResults}
               className="block p-4 pl-10 w-full text-sm text-gray-900 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
               placeholder="Search Articles..."
               required

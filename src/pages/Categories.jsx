@@ -1,10 +1,12 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useMemo } from "react";
 import { getCategories, searchForCategory } from "../api/categoryApis";
 import Table from "../components/Table";
 import DefaultLayout from "../layout/DefaultLayout";
 import { Helmet } from "react-helmet";
 import { getErrorMessage } from "../utilities/functions";
 import { GlobalContext, showToast } from "../globalContext";
+import debounce from "lodash.debounce"
+import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 
 const Categories = () => {
   const [categories, setCategories] = useState();
@@ -40,6 +42,16 @@ const Categories = () => {
     }
   };
 
+  const debouncedResults = useMemo(() => {
+    return debounce(handleChange, 500);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      debouncedResults.cancel();
+    };
+  });
+
   return (
     <DefaultLayout>
       <Helmet>
@@ -56,30 +68,14 @@ const Categories = () => {
             </label>
             <div className="relative">
               <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
-                <svg
-                  aria-hidden="true"
-                  className="w-5 h-5 text-gray-500"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  ></path>
-                </svg>
+              <MagnifyingGlassIcon className="w-5 h-5" />
               </div>
               <input
                 type="search"
                 id="default-search"
-                value={search}
-                onChange={(e) => handleChange(e)}
+                onChange={debouncedResults}
                 className="block p-4 pl-10 w-full text-sm text-gray-900 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Search Categories..."
-                required
               />
             </div>
             <div className="mt-4">
