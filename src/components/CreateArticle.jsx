@@ -105,7 +105,7 @@ const CreateArticle = () => {
     }
   };
   return (
-    <CreateLayout title="Article" backTo="/admin/article">
+    <CreateLayout title="Article" backTo="/admin/article" articleTitle={title} articleContent={content}>
       {categories && (
         <>
           <div className="relative z-0 mb-6 w-full group">
