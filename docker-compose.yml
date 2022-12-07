@@ -1,0 +1,12 @@
+version: "3.8"
+
+services:
+  app:
+    container_name: app-svkb  
+    image: app-svkb
+    build: 
+      target: production
+    volumes:
+      - ./src:/app/src
+    ports:
+      - 8080:80
