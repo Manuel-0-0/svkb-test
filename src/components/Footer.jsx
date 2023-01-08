@@ -44,7 +44,7 @@ const Footer = () => {
             <div className="sm:flex px-8 sm:justify-between py-2">
               <div>
                 <p className="whitespace-nowrap my-4">
-                  &copy; Copyright SV KB 2022
+                  &copy; Copyright SV KB {new Date().getFullYear()}
                 </p>
               </div>
               <div>

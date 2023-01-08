@@ -7,6 +7,7 @@ import { Helmet } from "react-helmet";
 import { getErrorMessage } from "../utilities/functions";
 import { GlobalContext, showToast } from "../globalContext";
 import debounce from "lodash.debounce"
+import PaginationBar from "../components/PaginationBar";
 
 const AdminDashboardCategories = () => {
 
@@ -15,10 +16,24 @@ const AdminDashboardCategories = () => {
   const [search, setSearch] = useState();
   const [filteredCategories, setFilteredCategories] = useState();
   const { dispatch: globalDispatch } = useContext(GlobalContext);
+  const [pageNumber, setPageNumber] = useState(0);
+  const [pageSize,] = useState(10);
+  const [totalNumber, setTotalNumber] = useState(0);
+  const [pageCount, setPageCount] = useState(0);
+  const [canNextPage, setCanNextPage] = useState(false);
+  const [canPrevPage, setCanPrevPage] = useState(false);
+
+  const prevPage = () => {
+    setPageNumber(pageNumber - 1 > 0 ? pageNumber - 1 : 0);
+  };
+
+  const nextPage = () => {
+    setPageNumber(pageNumber + 1 <= pageCount ? pageNumber + 1 : 0);
+  };
 
   const getAllCategories = async () => {
     try {
-      const response = await getCategories();
+      const response = await getCategories({ page: pageNumber, limit: pageSize });
       setCategories(response.data);
       setFilteredCategories(response.data);
     } catch (err) {
@@ -37,7 +52,7 @@ const AdminDashboardCategories = () => {
   const handleChange = async (e) => {
     setSearch(e.target.value);
     if (e.target.value) {
-      const response = await searchForCategory({ search: e.target.value });
+      const response = await searchForCategory({ search: e.target.value, page: pageNumber, limit: pageSize });
       setFilteredCategories(response.data);
     } else {
       setFilteredCategories(categories);
@@ -53,6 +68,16 @@ const AdminDashboardCategories = () => {
       debouncedResults.cancel();
     };
   });
+
+  useEffect(() => {
+    if (filteredCategories) {
+      setPageNumber(filteredCategories.Pagination.current_page);
+      setTotalNumber(filteredCategories.Pagination.total_categories);
+      setPageCount(filteredCategories.Pagination.num_of_pages);
+      setCanNextPage(filteredCategories.Pagination.current_page < filteredCategories.Pagination.num_of_pages)
+      setCanPrevPage(filteredCategories.Pagination.current_page > 0)
+    }
+  }, [filteredCategories]);
 
   return (
     <AuthenticatedLayout>
@@ -112,7 +137,16 @@ const AdminDashboardCategories = () => {
                 { name: "Articles In Category", id: "articleNum" },
                 { name: "Date Created", id: "dateCreated" }
               ]}
-              articles={filteredCategories}
+              articles={filteredCategories?.Categories}
+            />
+            <PaginationBar
+              currentPage={pageNumber}
+              pageSize={pageSize}
+              canPrevPage={canPrevPage}
+              canNextPage={canNextPage}
+              nextPage={nextPage}
+              prevPage={prevPage}
+              totalNumber={totalNumber}
             />
           </div>
         </div>

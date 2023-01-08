@@ -15,7 +15,7 @@ const Home = () => {
   const getAllCategories = async () => {
     try {
       const response = await getCategories({ page: 0, limit: 6 });
-      setCategories(response.data);
+      setCategories(response.data?.Categories);
     } catch (err) {
       const error = getErrorMessage(err);
       showToast(globalDispatch, {
@@ -28,7 +28,7 @@ const Home = () => {
   const getAllArticles = async () => {
     try {
       const response = await getPublishedArticles({ page: 0, limit: 6 });
-      setArticles(response.data);
+      setArticles(response.data?.Articles);
     } catch (err) {
       const error = getErrorMessage(err);
       showToast(globalDispatch, {

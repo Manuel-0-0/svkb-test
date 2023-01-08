@@ -6,6 +6,7 @@ import AuthenticatedLayout from "../layout/AuthenticatedLayout";
 import { Helmet } from "react-helmet";
 import { GlobalContext, showToast } from "../globalContext"
 import { getErrorMessage } from "../utilities/functions";
+import PaginationBar from "../components/PaginationBar";
 import debounce from "lodash.debounce"
 
 const AdminDashboardArticle = () => {
@@ -14,10 +15,24 @@ const AdminDashboardArticle = () => {
   const [articles, setArticles] = useState();
   const [search, setSearch] = useState();
   const [filteredArticles, setFilteredArticles] = useState();
+  const [pageNumber, setPageNumber] = useState(0);
+  const [pageSize,] = useState(10);
+  const [totalNumber, setTotalNumber] = useState(0);
+  const [pageCount, setPageCount] = useState(0);
+  const [canNextPage, setCanNextPage] = useState(false);
+  const [canPrevPage, setCanPrevPage] = useState(false);
+
+  const prevPage = () => {
+    setPageNumber(pageNumber - 1 > 0 ? pageNumber - 1 : 0);
+  };
+
+  const nextPage = () => {
+    setPageNumber(pageNumber + 1 <= pageCount ? pageNumber + 1 : 0);
+  };
 
   const getAllArticles = async () => {
     try {
-      const response = await getArticles();
+      const response = await getArticles({ page: pageNumber, limit: pageSize });
       setArticles(response.data);
       setFilteredArticles(response.data);
     } catch (err) {
@@ -36,7 +51,7 @@ const AdminDashboardArticle = () => {
   const handleChange = async (e) => {
     setSearch(e.target.value);
     if (e.target.value) {
-      const response = await searchForArticle({ search: e.target.value })
+      const response = await searchForArticle({ search: e.target.value, page: pageNumber, limit: pageSize })
       setFilteredArticles(response.data);
     } else {
       setFilteredArticles(articles);
@@ -52,6 +67,16 @@ const AdminDashboardArticle = () => {
       debouncedResults.cancel();
     };
   });
+
+  useEffect(() => {
+    if (filteredArticles) {
+      setPageNumber(filteredArticles.Pagination.current_page);
+      setTotalNumber(filteredArticles.Pagination.total_articles);
+      setPageCount(filteredArticles.Pagination.num_of_pages);
+      setCanNextPage(filteredArticles.Pagination.current_page < filteredArticles.Pagination.num_of_pages)
+      setCanPrevPage(filteredArticles.Pagination.current_page > 0)
+    }
+  }, [filteredArticles]);
 
   return (
     <AuthenticatedLayout>
@@ -111,7 +136,16 @@ const AdminDashboardArticle = () => {
                   link: "admin/category",
                 },
               ]}
-              articles={filteredArticles}
+              articles={filteredArticles?.Articles}
+            />
+            <PaginationBar
+              currentPage={pageNumber}
+              pageSize={pageSize}
+              canPrevPage={canPrevPage}
+              canNextPage={canNextPage}
+              nextPage={nextPage}
+              prevPage={prevPage}
+              totalNumber={totalNumber}
             />
           </div>
         </div>

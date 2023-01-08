@@ -24,7 +24,7 @@ const CreateArticle = () => {
     try {
       setLoading(true);
       const response = await getCategories();
-      setCategories(response.data);
+      setCategories(response.data.Categories);
       setLoading(false);
     } catch (err) {
       const error = getErrorMessage(err);

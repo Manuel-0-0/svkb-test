@@ -15,6 +15,7 @@ import { Helmet } from "react-helmet";
 import { GlobalContext, showToast } from "../globalContext";
 import { getErrorMessage } from "../utilities/functions";
 import AuthenticatedLayout from "../layout/AuthenticatedLayout";
+import PaginationBar from "../components/PaginationBar";
 
 const AdminDashboardHome = () => {
   const { state } = useContext(AuthContext);
@@ -24,6 +25,20 @@ const AdminDashboardHome = () => {
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleteId, setDeleteId] = useState();
   const [progress, setProgress] = useState(0);
+  const [pageNumber, setPageNumber] = useState(0);
+  const [pageSize,] = useState(10);
+  const [totalNumber, setTotalNumber] = useState(0);
+  const [pageCount, setPageCount] = useState(0);
+  const [canNextPage, setCanNextPage] = useState(false);
+  const [canPrevPage, setCanPrevPage] = useState(false);
+
+  const prevPage = () => {
+    setPageNumber(pageNumber - 1 > 0 ? pageNumber - 1 : 0);
+  };
+
+  const nextPage = () => {
+    setPageNumber(pageNumber + 1 <= pageCount ? pageNumber + 1 : 0);
+  };
 
   const getAllCategories = async () => {
     try {
@@ -38,29 +53,29 @@ const AdminDashboardHome = () => {
     }
   };
 
-  const  generateGreetings = () =>{
+  const generateGreetings = () => {
     const currentHour = moment().format("HH");
-    if (currentHour >= 5 && currentHour < 12){
-        return "Good Morning";
-    } else if (currentHour >= 12 && currentHour < 17){
-        return "Good Afternoon";
-    }   else if (currentHour >= 17 && currentHour < 20){
-        return "Good Evening";
-    } else if (currentHour >= 20){
-        return "Good Night";
+    if (currentHour >= 5 && currentHour < 12) {
+      return "Good Morning";
+    } else if (currentHour >= 12 && currentHour < 17) {
+      return "Good Afternoon";
+    } else if (currentHour >= 17 && currentHour < 20) {
+      return "Good Evening";
+    } else if (currentHour >= 20) {
+      return "Good Night";
     } else {
-        return "Hello"
+      return "Hello"
     }
   }
 
   const getAllArticles = async () => {
     try {
-      const response = await getUserArticles({ id: Cookies.get("sv_user_id") });
+      const response = await getUserArticles({ id: Cookies.get("sv_user_id"), page: pageNumber, limit: pageSize  });
       setArticles(response.data);
-      const published = response.data.filter(
+      const published = response.data.Articles.filter(
         (article) => article.Article.draftStatus === true
       ).length;
-      const total = response.data.length;
+      const total = response.data.Articles.length;
       if (published > 0 && total > 0) {
         setProgress((published / total) * 100);
       }
@@ -83,7 +98,7 @@ const AdminDashboardHome = () => {
           draftStatus: article.draftStatus ? "False" : "True",
         },
       });
-      
+
       showToast(globalDispatch, {
         message: "Article Status Updated Successfully",
         type: "success",
@@ -118,6 +133,16 @@ const AdminDashboardHome = () => {
     getAllArticles();
   }, []);
 
+  useEffect(() => {
+    if (articles) {
+      setPageNumber(articles.Pagination.current_page);
+      setTotalNumber(articles.Pagination.total_articles);
+      setPageCount(articles.Pagination.num_of_pages);
+      setCanNextPage(articles.Pagination.current_page < articles.Pagination.num_of_pages)
+      setCanPrevPage(articles.Pagination.current_page > 0)
+    }
+  }, [articles]);
+
   const myStyle = {
     width: `${progress}%`,
   };
@@ -150,12 +175,12 @@ const AdminDashboardHome = () => {
                       </div>
                       <div className="border-b border-gray-200 mt-6 md:mt-0 text-black font-bold text-xl">
                         {
-                          articles.filter(
+                          articles.Articles.filter(
                             (article) => article.Article.draftStatus === true
                           ).length
                         }
                         <span className="text-xs text-gray-400">
-                          /{articles.length} published
+                          /{articles.Articles.length} published
                         </span>
                       </div>
                     </div>
@@ -172,7 +197,7 @@ const AdminDashboardHome = () => {
                 <div className="w-1/2">
                   <div className="shadow-lg px-4 py-6 w-full bg-white relative">
                     <p className="text-2xl text-black font-bold">
-                      {categories.length}
+                      {categories.Categories.length}
                     </p>
                     <p className="text-gray-400 text-sm">Categories Created</p>
                   </div>
@@ -180,7 +205,7 @@ const AdminDashboardHome = () => {
                 <div className="w-1/2">
                   <div className="shadow-lg px-4 py-6 w-full bg-white relative">
                     <p className="text-2xl text-black font-bold">
-                      {articles.length}
+                      {articles.Articles.length}
                     </p>
                     <p className="text-gray-400 text-sm">Articles Created</p>
                   </div>
@@ -215,7 +240,7 @@ const AdminDashboardHome = () => {
                     </th>
                   </tr>
                 </thead>
-                {articles.map((article) => (
+                {articles.Articles.map((article) => (
                   <tbody key={article.Article.id}>
                     <tr className="bg-white border-b">
                       <th
@@ -275,6 +300,16 @@ const AdminDashboardHome = () => {
                   </tbody>
                 ))}
               </table>
+
+              <PaginationBar
+                currentPage={pageNumber}
+                pageSize={pageSize}
+                canPrevPage={canPrevPage}
+                canNextPage={canNextPage}
+                nextPage={nextPage}
+                prevPage={prevPage}
+                totalNumber={totalNumber}
+              />
             </div>
             <DeleteModal
               open={deleteOpen}
