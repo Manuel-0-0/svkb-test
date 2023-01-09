@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useMemo } from "react";
+import React, { useState, useEffect, useContext, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { getCategories, searchForCategory } from "../api/categoryApis";
 import Table from "../components/Table";
@@ -8,6 +8,7 @@ import { getErrorMessage } from "../utilities/functions";
 import { GlobalContext, showToast } from "../globalContext";
 import debounce from "lodash.debounce"
 import PaginationBar from "../components/PaginationBar";
+import { PageSize } from "../utilities/functions";
 
 const AdminDashboardCategories = () => {
 
@@ -17,7 +18,7 @@ const AdminDashboardCategories = () => {
   const [filteredCategories, setFilteredCategories] = useState();
   const { dispatch: globalDispatch } = useContext(GlobalContext);
   const [pageNumber, setPageNumber] = useState(0);
-  const [pageSize,] = useState(10);
+  const [pageSize,] = useState(PageSize);
   const [totalNumber, setTotalNumber] = useState(0);
   const [pageCount, setPageCount] = useState(0);
   const [canNextPage, setCanNextPage] = useState(false);
@@ -31,7 +32,11 @@ const AdminDashboardCategories = () => {
     setPageNumber(pageNumber + 1 <= pageCount ? pageNumber + 1 : 0);
   };
 
-  const getAllCategories = async () => {
+  const onPageChange = (number) =>{
+    setPageNumber(number)
+  }
+
+  const getAllCategories = useCallback(async () => {
     try {
       const response = await getCategories({ page: pageNumber, limit: pageSize });
       setCategories(response.data);
@@ -43,11 +48,11 @@ const AdminDashboardCategories = () => {
         type: "error",
       });
     }
-  };
+  },[pageNumber])
 
   useEffect(() => {
     getAllCategories();
-  }, []);
+  }, [getAllCategories]);
 
   const handleChange = async (e) => {
     setSearch(e.target.value);
@@ -74,7 +79,7 @@ const AdminDashboardCategories = () => {
       setPageNumber(filteredCategories.Pagination.current_page);
       setTotalNumber(filteredCategories.Pagination.total_categories);
       setPageCount(filteredCategories.Pagination.num_of_pages);
-      setCanNextPage(filteredCategories.Pagination.current_page < filteredCategories.Pagination.num_of_pages)
+      setCanNextPage(filteredCategories.Pagination.current_page < filteredCategories.Pagination.num_of_pages - 1)
       setCanPrevPage(filteredCategories.Pagination.current_page > 0)
     }
   }, [filteredCategories]);
@@ -146,6 +151,7 @@ const AdminDashboardCategories = () => {
               canNextPage={canNextPage}
               nextPage={nextPage}
               prevPage={prevPage}
+              onPageChange={onPageChange}
               totalNumber={totalNumber}
             />
           </div>

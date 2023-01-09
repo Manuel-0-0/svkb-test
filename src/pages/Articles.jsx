@@ -1,17 +1,21 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useMemo, useCallback, useContext } from "react";
 import DefaultLayout from "../layout/DefaultLayout";
 import { getPublishedArticles, searchForPublishedArticle } from "../api/articleApis";
 import Table from "../components/Table";
 import PaginationBar from "../components/PaginationBar";
+import { getErrorMessage } from "../utilities/functions";
+import { GlobalContext, showToast } from "../globalContext";
 import debounce from "lodash.debounce"
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { PageSize } from "../utilities/functions";
 
 const Articles = () => {
   const [articles, setArticles] = useState();
   const [, setSearch] = useState();
   const [filteredArticles, setFilteredArticles] = useState();
+  const { dispatch: globalDispatch } = useContext(GlobalContext);
   const [pageNumber, setPageNumber] = useState(0);
-  const [pageSize, ] = useState(3);
+  const [pageSize,] = useState(PageSize);
   const [totalNumber, setTotalNumber] = useState(0);
   const [pageCount, setPageCount] = useState(0);
   const [canNextPage, setCanNextPage] = useState(false);
@@ -29,12 +33,22 @@ const Articles = () => {
     setPageNumber(pageNumber + 1 <= pageCount ? pageNumber + 1 : 0);
   };
 
+  const onPageChange = (number) => {
+    setPageNumber(number)
+  }
+
   const getAllArticles = useCallback(async () => {
     try {
       const response = await getPublishedArticles({ page: pageNumber, limit: pageSize });
       setArticles(response.data);
       setFilteredArticles(response.data);
-    } catch (err) { }
+    } catch (err) {
+      const error = getErrorMessage(err);
+      showToast(globalDispatch, {
+        message: error,
+        type: "error",
+      });
+    }
   }, [pageNumber]);
 
   const handleChange = async (e) => {
@@ -66,12 +80,10 @@ const Articles = () => {
       setPageNumber(filteredArticles.Pagination.current_page);
       setTotalNumber(filteredArticles.Pagination.total_articles);
       setPageCount(filteredArticles.Pagination.num_of_pages);
-      setCanNextPage(filteredArticles.Pagination.current_page < filteredArticles.Pagination.num_of_pages)
+      setCanNextPage(filteredArticles.Pagination.current_page < filteredArticles.Pagination.num_of_pages - 1)
       setCanPrevPage(filteredArticles.Pagination.current_page > 0)
     }
   }, [filteredArticles]);
-
-  console.log(filteredArticles)
 
   return (
     <DefaultLayout>
@@ -113,6 +125,7 @@ const Articles = () => {
               canNextPage={canNextPage}
               nextPage={nextPage}
               prevPage={prevPage}
+              onPageChange={onPageChange}
               totalNumber={totalNumber}
             />
           </div>

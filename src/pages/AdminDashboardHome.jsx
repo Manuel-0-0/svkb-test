@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { NewspaperIcon, TrashIcon, PencilIcon } from "@heroicons/react/20/solid";
 import { AuthContext } from "../authContext";
@@ -16,6 +16,7 @@ import { GlobalContext, showToast } from "../globalContext";
 import { getErrorMessage } from "../utilities/functions";
 import AuthenticatedLayout from "../layout/AuthenticatedLayout";
 import PaginationBar from "../components/PaginationBar";
+import { PageSize } from "../utilities/functions";
 
 const AdminDashboardHome = () => {
   const { state } = useContext(AuthContext);
@@ -26,7 +27,7 @@ const AdminDashboardHome = () => {
   const [deleteId, setDeleteId] = useState();
   const [progress, setProgress] = useState(0);
   const [pageNumber, setPageNumber] = useState(0);
-  const [pageSize,] = useState(10);
+  const [pageSize,] = useState(PageSize);
   const [totalNumber, setTotalNumber] = useState(0);
   const [pageCount, setPageCount] = useState(0);
   const [canNextPage, setCanNextPage] = useState(false);
@@ -39,6 +40,10 @@ const AdminDashboardHome = () => {
   const nextPage = () => {
     setPageNumber(pageNumber + 1 <= pageCount ? pageNumber + 1 : 0);
   };
+
+  const onPageChange = (number) => {
+    setPageNumber(number)
+  }
 
   const getAllCategories = async () => {
     try {
@@ -68,9 +73,9 @@ const AdminDashboardHome = () => {
     }
   }
 
-  const getAllArticles = async () => {
+  const getAllArticles = useCallback(async () => {
     try {
-      const response = await getUserArticles({ id: Cookies.get("sv_user_id"), page: pageNumber, limit: pageSize  });
+      const response = await getUserArticles({ id: Cookies.get("sv_user_id"), page: pageNumber, limit: pageSize });
       setArticles(response.data);
       const published = response.data.Articles.filter(
         (article) => article.Article.draftStatus === true
@@ -86,7 +91,7 @@ const AdminDashboardHome = () => {
         type: "error",
       });
     }
-  };
+  }, [pageNumber])
 
   const publishArticle = async (id, article) => {
     try {
@@ -130,15 +135,18 @@ const AdminDashboardHome = () => {
 
   useEffect(() => {
     getAllCategories();
-    getAllArticles();
   }, []);
+
+  useEffect(() => {
+    getAllArticles()
+  }, [getAllArticles])
 
   useEffect(() => {
     if (articles) {
       setPageNumber(articles.Pagination.current_page);
       setTotalNumber(articles.Pagination.total_articles);
       setPageCount(articles.Pagination.num_of_pages);
-      setCanNextPage(articles.Pagination.current_page < articles.Pagination.num_of_pages)
+      setCanNextPage(articles.Pagination.current_page < articles.Pagination.num_of_pages - 1)
       setCanPrevPage(articles.Pagination.current_page > 0)
     }
   }, [articles]);
@@ -170,7 +178,7 @@ const AdminDashboardHome = () => {
                           <NewspaperIcon className="w-5 h-5" />
                         </span>
                         <p className="text-sm text-gray-700 ml-2 font-semibold border-b border-gray-200">
-                          Total number of articles
+                          Total number of articles : {articles.Pagination.total_articles}
                         </p>
                       </div>
                       <div className="border-b border-gray-200 mt-6 md:mt-0 text-black font-bold text-xl">
@@ -180,7 +188,7 @@ const AdminDashboardHome = () => {
                           ).length
                         }
                         <span className="text-xs text-gray-400">
-                          /{articles.Articles.length} published
+                          /{articles.Articles.length} published on page {articles.Pagination.current_page + 1}
                         </span>
                       </div>
                     </div>
@@ -205,7 +213,7 @@ const AdminDashboardHome = () => {
                 <div className="w-1/2">
                   <div className="shadow-lg px-4 py-6 w-full bg-white relative">
                     <p className="text-2xl text-black font-bold">
-                      {articles.Articles.length}
+                      {articles.Pagination.total_articles}
                     </p>
                     <p className="text-gray-400 text-sm">Articles Created</p>
                   </div>
@@ -308,6 +316,7 @@ const AdminDashboardHome = () => {
                 canNextPage={canNextPage}
                 nextPage={nextPage}
                 prevPage={prevPage}
+                onPageChange={onPageChange}
                 totalNumber={totalNumber}
               />
             </div>

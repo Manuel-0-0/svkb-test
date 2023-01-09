@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useMemo } from "react";
+import React, { useState, useEffect, useContext, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { getArticles, searchForArticle } from "../api/articleApis";
 import Table from "../components/Table";
@@ -8,6 +8,7 @@ import { GlobalContext, showToast } from "../globalContext"
 import { getErrorMessage } from "../utilities/functions";
 import PaginationBar from "../components/PaginationBar";
 import debounce from "lodash.debounce"
+import { PageSize } from "../utilities/functions";
 
 const AdminDashboardArticle = () => {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ const AdminDashboardArticle = () => {
   const [search, setSearch] = useState();
   const [filteredArticles, setFilteredArticles] = useState();
   const [pageNumber, setPageNumber] = useState(0);
-  const [pageSize,] = useState(10);
+  const [pageSize,] = useState(PageSize);
   const [totalNumber, setTotalNumber] = useState(0);
   const [pageCount, setPageCount] = useState(0);
   const [canNextPage, setCanNextPage] = useState(false);
@@ -30,7 +31,11 @@ const AdminDashboardArticle = () => {
     setPageNumber(pageNumber + 1 <= pageCount ? pageNumber + 1 : 0);
   };
 
-  const getAllArticles = async () => {
+  const onPageChange = (number) =>{
+    setPageNumber(number)
+  }
+
+  const getAllArticles = useCallback(async () => {
     try {
       const response = await getArticles({ page: pageNumber, limit: pageSize });
       setArticles(response.data);
@@ -42,11 +47,13 @@ const AdminDashboardArticle = () => {
         type: "error",
       });
     }
-  };
+  }, [pageNumber]);
 
   useEffect(() => {
     getAllArticles();
-  }, []);
+  }, [getAllArticles]);
+
+
 
   const handleChange = async (e) => {
     setSearch(e.target.value);
@@ -73,7 +80,7 @@ const AdminDashboardArticle = () => {
       setPageNumber(filteredArticles.Pagination.current_page);
       setTotalNumber(filteredArticles.Pagination.total_articles);
       setPageCount(filteredArticles.Pagination.num_of_pages);
-      setCanNextPage(filteredArticles.Pagination.current_page < filteredArticles.Pagination.num_of_pages)
+      setCanNextPage(filteredArticles.Pagination.current_page < filteredArticles.Pagination.num_of_pages - 1)
       setCanPrevPage(filteredArticles.Pagination.current_page > 0)
     }
   }, [filteredArticles]);
@@ -145,6 +152,7 @@ const AdminDashboardArticle = () => {
               canNextPage={canNextPage}
               nextPage={nextPage}
               prevPage={prevPage}
+              onPageChange={onPageChange}
               totalNumber={totalNumber}
             />
           </div>
